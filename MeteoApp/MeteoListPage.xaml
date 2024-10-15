@@ -3,9 +3,9 @@
              x:Class="MeteoApp.MeteoListPage">
     <ContentPage>
         <ContentPage.ToolbarItems>
+            <ToolbarItem Text="TestPage" Clicked="OnTestPageClicked" />
             <ToolbarItem Text="Add" Clicked="OnItemAdded" />
         </ContentPage.ToolbarItems>
-
         <ListView x:Name="zlistView" Margin="20" ItemSelected="OnListItemSelected" ItemsSource="{Binding Entries}">
             <ListView.ItemTemplate>
                 <DataTemplate>

@@ -74,10 +74,16 @@
 	  <MauiXaml Condition=" '$(EnableDefaultXamlItems)' == 'true' " Update="MeteoItemPage.xaml">
 	    <SubType>Designer</SubType>
 	  </MauiXaml>
+	  <MauiXaml Update="TestPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	</ItemGroup>
 	<ItemGroup>
 	  <Compile Condition=" '$(EnableDefaultCompileItems)' == 'true' " Update="MeteoListPage.xaml.cs">
 	    <DependentUpon>MeteoListPage.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="TestPage.xaml.cs">
+	    <DependentUpon>TestPage.xaml</DependentUpon>
 	  </Compile>
 	</ItemGroup>
 </Project>
