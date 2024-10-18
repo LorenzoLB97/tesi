@@ -1,10 +1,16 @@
 ﻿using SQLite;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace MeteoApp
+namespace MeteoApp.Models
 {
-    public class Entry
+    //Chiedere: dovrebbe essere public/private o intern?
+    public class CurrentLocationEntry
     {
-        [PrimaryKey, AutoIncrement]
+        [PrimaryKey]
         public int Id { get; set; }
         public string CompleteAddress { get; set; }
         public string Street { get; set; }

@@ -1,10 +1,14 @@
-﻿namespace MeteoApp;
+﻿using System.Diagnostics;
+using System.Runtime.CompilerServices;
+
+namespace MeteoApp;
 
 /**
  *  Questa classe eredita da Shell, che è una componente di navigazione in .NET MAUI.
  */
 public partial class MeteoListPage : Shell
 {
+    private readonly GeoLocationService geoLocationService = new GeoLocationService();
     public Dictionary<string, Type> Routes { get; private set; } = new Dictionary<string, Type>();
 
     public MeteoListPage()
@@ -45,7 +49,7 @@ public partial class MeteoListPage : Shell
 
     private void OnItemAdded(object sender, EventArgs e)
     {
-         _ = ShowPrompt();
+        _ = ShowPrompt();
     }
 
     private async Task ShowPrompt()
@@ -57,5 +61,15 @@ public partial class MeteoListPage : Shell
     {
         // Naviga alla pagina TestPage
         await Shell.Current.GoToAsync(nameof(TestPage));
+    }
+
+    public void testMessage()
+    {
+        Debug.WriteLine("AAAAAAAAAAAA");
+    }
+
+    public void GetCurrentLocation()
+    {
+        geoLocationService.GetCurrentLocation(BindingContext as BaseViewModel);
     }
 }

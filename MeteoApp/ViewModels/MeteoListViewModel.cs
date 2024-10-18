@@ -1,10 +1,22 @@
-﻿using System.Collections.ObjectModel;
+﻿using MeteoApp.Models;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
 
 namespace MeteoApp
 {
+    /**
+     * Classe ViewModel che fa da base alla lista di locazioni
+     */
     public class MeteoListViewModel : BaseViewModel
     {
-        ObservableCollection<Entry> _entries;
+        /**
+         * location aggiunte tramite bottone add
+         * */
+        ObservableCollection<Entry> _entries; 
+        /**
+         * Location corrente, acquisita ogni volta che si apre l'app (una volta sola).
+         * */
+        CurrentLocationEntry _currentLocation; 
 
         public ObservableCollection<Entry> Entries
         {
@@ -16,19 +28,36 @@ namespace MeteoApp
             }
         }
 
+        public CurrentLocationEntry CurrentLocation { 
+            get { return _currentLocation; } 
+            set 
+            {
+                _currentLocation = value;
+                OnPropertyChanged();
+                Debug.WriteLine("AAAAAA NUOVO VALORE DI CURRENTLOCATION " + value.CompleteAddress);
+            }
+        }
+
         public MeteoListViewModel()
         {
             Entries = new ObservableCollection<Entry>();
 
-            for (var i = 0; i < 10; i++)
-            {
-                var e = new Entry
-                {
-                    Id = i
-                };
+            List<Entry> dbEntries = App.Database.GetEntries();
 
-                Entries.Add(e);
+            for (var i = 0; i < dbEntries.Count; i++)
+            {
+                Entries.Add(dbEntries[i]);
             }
+
+            Entries.Add(new Entry
+            {
+                Id = 2, // In un contesto reale, l'Id potrebbe essere generato automaticamente dal database
+                CompleteAddress = "123 Main Street, Springfield, 12345, USA",
+                Street = "123 Main Street",
+                City = "Springfield",
+                PostalCode = "12345",
+                Country = "USA"
+            });
         }
     }
 }
