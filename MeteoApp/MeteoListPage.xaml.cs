@@ -63,11 +63,6 @@ public partial class MeteoListPage : Shell
         await Shell.Current.GoToAsync(nameof(TestPage));
     }
 
-    public void testMessage()
-    {
-        Debug.WriteLine("AAAAAAAAAAAA");
-    }
-
     public void GetCurrentLocation()
     {
         geoLocationService.GetCurrentLocation(BindingContext as BaseViewModel);

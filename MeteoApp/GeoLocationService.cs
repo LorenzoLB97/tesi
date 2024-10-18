@@ -1,6 +1,7 @@
 ﻿using MeteoApp.Models;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
@@ -10,6 +11,7 @@ namespace MeteoApp
 {
     public class GeoLocationService
     {
+        private int currentLocationId = 1;
         public async Task GetCurrentLocation(BaseViewModel bindingContext)
         {
             var permissions = await Permissions.CheckStatusAsync<Permissions.LocationWhenInUse>();
@@ -64,11 +66,9 @@ namespace MeteoApp
 
                 await App.Current.MainPage.DisplayAlert("Location Address", $"Address: {completeAddress}", "OK");
 
-                //AddToDB(new CurrentLocationEntry(completeAddress, street, city, postalCode, country));
-
-                AddToDB(bindingContext, new CurrentLocationEntry
+                AddToDB(bindingContext, new Entry
                 {
-                    Id = 1, // In un contesto reale, l'Id potrebbe essere generato automaticamente dal database
+                    Id = App.Database.GetCurrentLocationId(), // 1 é SEMPRE l'id della currentLocation.
                     CompleteAddress = completeAddress,
                     Street = street,
                     City = city,
@@ -82,15 +82,33 @@ namespace MeteoApp
             }
         }
 
-        private void AddToDB(BaseViewModel bindingContext, CurrentLocationEntry currentLocationEntry)
+        /**
+         * La currentLocation deve sostituire quella già presente nel DB
+         * E in più deve sostituire il primo elemento della Observable
+         * Collection di MeteoListViewModel (passata come parametro al metodo)
+         * ATTENZIONE! L'observable collection deve essere sostituita TOTALMENTE,
+         * non basta fare add(entry) perché altrimenti non si attiva OnPropertyChange()
+         */
+        private void AddToDB(BaseViewModel bindingContext, Entry currentLocationEntry)
         {
+            //Ok
             App.Database.UpsertCurrentLocation(currentLocationEntry);
-            (bindingContext as MeteoListViewModel).CurrentLocation = currentLocationEntry;
+        
+            MeteoListViewModel meteoListViewModelContext = bindingContext as MeteoListViewModel;
 
+            // Crea una nuova collezione e sostituisci la vecchia
+            ObservableCollection<Entry> newEntries = new ObservableCollection<Entry>(meteoListViewModelContext.Entries);
 
-            //Funziona: la current location viene effettivamente scritta nel database,
-            //ora bisogna vedere perché non viene mostratrata a schermo
-            Debug.WriteLine("AAAAAAAAAAAA " + App.Database.GetCurrentLocationEntry().CompleteAddress);
+            // Rimuovi la vecchia currentLocation (se esiste) e aggiungi la nuova
+            var previousCurrentLocation = newEntries.FirstOrDefault();
+            if (previousCurrentLocation != null)
+            {
+                newEntries.Remove(previousCurrentLocation);
+            }
+            newEntries.Insert(0, currentLocationEntry); // Inserisci la nuova CurrentLocation in cima
+
+            // Sostituisci la collezione e chiama OnPropertyChanged
+            meteoListViewModelContext.Entries = newEntries;
         }
     }
 }

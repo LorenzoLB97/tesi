@@ -33,9 +33,4 @@ public partial class MeteoItemPage : ContentPage
     {
         base.OnAppearing();
     }
-
-    public void IncreaseNumber(object sender, EventArgs args)
-    {
-
-    }
 }

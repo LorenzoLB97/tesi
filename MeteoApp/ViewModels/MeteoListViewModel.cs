@@ -16,7 +16,6 @@ namespace MeteoApp
         /**
          * Location corrente, acquisita ogni volta che si apre l'app (una volta sola).
          * */
-        CurrentLocationEntry _currentLocation; 
 
         public ObservableCollection<Entry> Entries
         {
@@ -25,16 +24,11 @@ namespace MeteoApp
             {
                 _entries = value;
                 OnPropertyChanged();
-            }
-        }
 
-        public CurrentLocationEntry CurrentLocation { 
-            get { return _currentLocation; } 
-            set 
-            {
-                _currentLocation = value;
-                OnPropertyChanged();
-                Debug.WriteLine("AAAAAA NUOVO VALORE DI CURRENTLOCATION " + value.CompleteAddress);
+                if (value.FirstOrDefault() != null)
+                {
+                    Debug.WriteLine("VALORE DI CURRENTLOCATION CORRENTE: " + value.FirstOrDefault().CompleteAddress);
+                }
             }
         }
 
@@ -48,16 +42,6 @@ namespace MeteoApp
             {
                 Entries.Add(dbEntries[i]);
             }
-
-            Entries.Add(new Entry
-            {
-                Id = 2, // In un contesto reale, l'Id potrebbe essere generato automaticamente dal database
-                CompleteAddress = "123 Main Street, Springfield, 12345, USA",
-                Street = "123 Main Street",
-                City = "Springfield",
-                PostalCode = "12345",
-                Country = "USA"
-            });
         }
     }
 }

@@ -30,47 +30,66 @@ namespace MeteoApp
      */
     public class MyDatabase
     {
-        private SQLiteConnection _database {  get; set; }
+        private SQLiteConnection Database {  get; set; }
+        private int CurrentLocationEntryId { get; set; } = 1;
 
         public MyDatabase()
         {
             var dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "MyDatabase.db");
-            _database = new SQLiteConnection(dbPath);
-            _database.CreateTable<Entry>();
-            _database.CreateTable<CurrentLocationEntry>();           
+            Database = new SQLiteConnection(dbPath);
+            Database.CreateTable<Entry>();
+            //_database.CreateTable<CurrentLocationEntry>();           
         }
 
         public List<Entry> GetEntries()
         {
-            return _database.Table<Entry>().ToList();
+            return Database.Table<Entry>().ToList();
         }
 
-        public CurrentLocationEntry GetCurrentLocationEntry()
+        /**
+         * ritorna la current location, che é sempre il primo elemento della lista.
+         */
+        public Entry GetCurrentLocationEntry()
         {
-            return _database.Table<CurrentLocationEntry>().FirstOrDefault();
+            return Database.Table<Entry>().ToList().FirstOrDefault();
         }
 
         public int SaveEntry(Entry entry)
         {
-            return _database.Insert(entry);
+            return Database.Insert(entry);
         }
 
-        public void UpsertCurrentLocation(CurrentLocationEntry entry)
+        /**
+         * Questo metodo deve sostituire la currentLocation
+         * Se la tabella é vuota, semplicemente aggiunge la nuova entry
+         * Se la tabella non é vuota, deve trovare la entry con id=1 (che é la CurrentLocation)
+         * e sostuiturla con la nuova currentLocation.
+         */
+        public void UpsertCurrentLocation(Entry newCurrentLocationEntry)
         {
-            // Controlla se esiste già un record nella tabella
-            var existingEntry = _database.Table<CurrentLocationEntry>().FirstOrDefault();
+            // Trova la current location esistente
+            var existingEntry = Database.Find<Entry>(CurrentLocationEntryId);
 
-            if (existingEntry != null)
+            if (existingEntry != null) // Se la current location esiste già
             {
-                // Aggiorna il record esistente
-                entry.Id = existingEntry.Id; // Mantieni lo stesso ID per garantire l'aggiornamento
-                _database.Update(entry);
+                // Aggiorna l'entry esistente
+                Database.Update(newCurrentLocationEntry);
             }
             else
-            {
+            {                
                 // Inserisci un nuovo record
-                _database.Insert(entry);
+                Database.Insert(newCurrentLocationEntry);
             }
+        }
+
+        public void Remove(Entry entryToRemove)
+        {
+            Database.Delete(entryToRemove);
+        }
+
+        public int GetCurrentLocationId()
+        {
+            return CurrentLocationEntryId;
         }
     }
 }
