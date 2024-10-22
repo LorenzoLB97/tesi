@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MeteoApp
+namespace MeteoApp.service
 {
     public class GeoLocationService
     {
@@ -27,7 +27,7 @@ namespace MeteoApp
             }
             else
             {
-                await App.Current.MainPage.DisplayAlert("Permissions Error", "You have not granted the app permission to access your location.", "OK");
+                await Application.Current.MainPage.DisplayAlert("Permissions Error", "You have not granted the app permission to access your location.", "OK");
 
                 var requested = await Permissions.RequestAsync<Permissions.LocationWhenInUse>();
 
@@ -41,9 +41,9 @@ namespace MeteoApp
                 else
                 {
                     if (DeviceInfo.Platform == DevicePlatform.iOS || DeviceInfo.Platform == DevicePlatform.MacCatalyst)
-                        await App.Current.MainPage.DisplayAlert("Location Required", "Location is required to share it. Please enable location for this app in Settings.", "OK");
+                        await Application.Current.MainPage.DisplayAlert("Location Required", "Location is required to share it. Please enable location for this app in Settings.", "OK");
                     else
-                        await App.Current.MainPage.DisplayAlert("Location Required", "Location is required to share it. We'll ask again next time.", "OK");
+                        await Application.Current.MainPage.DisplayAlert("Location Required", "Location is required to share it. We'll ask again next time.", "OK");
                 }
             }
         }
@@ -61,9 +61,9 @@ namespace MeteoApp
                 string street = placemark.Thoroughfare;
                 string city = placemark.Locality;
                 string postalCode = placemark.PostalCode;
-                string country = placemark.CountryName;                  
+                string country = placemark.CountryName;
 
-                await App.Current.MainPage.DisplayAlert("Location Address", $"Address: {completeAddress}", "OK");
+                await Application.Current.MainPage.DisplayAlert("Location Address", $"Address: {completeAddress}", "OK");
 
                 AddToDB(bindingContext, new Entry
                 {
@@ -77,7 +77,7 @@ namespace MeteoApp
             }
             else
             {
-                await App.Current.MainPage.DisplayAlert("Location Address", "Non é stato possibile determinare l'address", "OK");
+                await Application.Current.MainPage.DisplayAlert("Location Address", "Non é stato possibile determinare l'address", "OK");
             }
         }
 
@@ -92,7 +92,7 @@ namespace MeteoApp
         {
             //Ok
             App.Database.UpsertCurrentLocation(currentLocationEntry);
-        
+
             MeteoListViewModel meteoListViewModelContext = bindingContext as MeteoListViewModel;
 
             // Crea una nuova collezione e sostituisci la vecchia
