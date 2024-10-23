@@ -1,6 +1,6 @@
 ﻿<Shell xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="MeteoApp.MeteoListPage">
+       xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+       x:Class="MeteoApp.MeteoListPage">
     <ContentPage>
         <ContentPage.ToolbarItems>
             <ToolbarItem Text="TestPage" Clicked="OnTestPageClicked" />
@@ -8,22 +8,33 @@
         </ContentPage.ToolbarItems>
 
         <StackLayout Margin="20">
-            <!-- Visualizza la CurrentLocation -->
-            <Label Text="Current Location:" FontAttributes="Bold" FontSize="18" />
-            <Label Text="{Binding CurrentLocation.CompleteAddress}" FontSize="14" LineBreakMode="WordWrap"/>
+            <!-- ActivityIndicator per mostrare il caricamento -->
+            <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" Color="Blue" />
 
-            <!-- Lista delle Entries -->
-            <ListView x:Name="zlistView" ItemSelected="OnListItemSelected" ItemsSource="{Binding Entries}">
-                <ListView.ItemTemplate>
+            <!-- CollectionView per la lista delle Entries -->
+            <CollectionView x:Name="zCollectionView" ItemsSource="{Binding Entries}" SelectionMode="Single" SelectionChanged="OnListItemSelected">
+                <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <ViewCell Height="100">
-                            <StackLayout Orientation="Vertical" HorizontalOptions="FillAndExpand">
-                                <Label Text="{Binding CompleteAddress}" VerticalTextAlignment="Center" HorizontalOptions="StartAndExpand" LineBreakMode="WordWrap" />
-                            </StackLayout>
-                        </ViewCell>
+                        <!-- Usare Grid per evitare l'uso di Frame e mantenere un layout ordinato -->
+                        <Grid Padding="10" Margin="5" BackgroundColor="LightGray">
+                            <!-- Definisce due righe per la centratura del contenuto -->
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+
+                            <!-- Etichetta centrata orizzontalmente e verticalmente -->
+                            <Label Grid.Row="1"
+                                   Text="{Binding CompleteAddress}"
+                                   VerticalTextAlignment="Center"
+                                   HorizontalOptions="CenterAndExpand"
+                                   HorizontalTextAlignment="Center"
+                                   LineBreakMode="WordWrap"
+                                   FontSize="Medium" />
+                        </Grid>
                     </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
         </StackLayout>
     </ContentPage>
 </Shell>

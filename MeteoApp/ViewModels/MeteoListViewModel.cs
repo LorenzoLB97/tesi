@@ -8,6 +8,7 @@ namespace MeteoApp
      */
     public class MeteoListViewModel : BaseViewModel
     {
+        private bool _isBusy;
         /**
          * location aggiunte tramite bottone add
          * */
@@ -28,6 +29,16 @@ namespace MeteoApp
                 {
                     Debug.WriteLine("VALORE DI CURRENTLOCATION CORRENTE: " + value.FirstOrDefault().CompleteAddress);
                 }
+            }
+        }
+
+        public bool IsBusy
+        {
+            get => _isBusy;
+            set
+            {
+                _isBusy = value;
+                OnPropertyChanged();
             }
         }
 

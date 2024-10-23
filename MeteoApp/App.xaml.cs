@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System.Collections.ObjectModel;
+using System.Diagnostics;
 
 namespace MeteoApp;
 
@@ -32,12 +33,28 @@ public partial class App : Application
     {
         base.OnStart();
 
-        /**al posto di usare una referenza statica possiamo usare WeakReferenceMessenger
-         * ma chiediamo prima a Galli dato che é da installare da NuGet
-         * Migliore: cerchiamo di usare un database
-         */
+        loadDBEntries();
+        
         var reference = MainPage as MeteoListPage;
 
         reference.GetCurrentLocation();
+    }
+
+    private async void loadDBEntries()
+    {
+        MeteoListPage reference = MainPage as MeteoListPage;
+        Debug.WriteLine("AAAAAAAAAAAAAAA QUI1");
+
+        if (_database != null)
+        {
+            Debug.WriteLine("AAAAAAAAAAAAAAA QUI2");
+
+            ObservableCollection<Entry> loadedEntries = new ObservableCollection<Entry>(Database.GetEntries());
+
+            if (loadedEntries.Count > 1) //esistono già delle personalEntries
+            {
+                (reference.BindingContext as MeteoListViewModel).Entries = loadedEntries;
+            }
+        }
     }
 }

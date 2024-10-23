@@ -13,25 +13,15 @@ namespace MeteoApp.service
         private int currentLocationId = 1;
         public async Task GetCurrentLocation(BaseViewModel bindingContext)
         {
-            var permissions = await Permissions.CheckStatusAsync<Permissions.LocationWhenInUse>();
-
-            GeolocationRequest locationRequest;
-            Location location = null;
-
-            if (permissions == PermissionStatus.Granted)
+            try
             {
-                locationRequest = new GeolocationRequest(GeolocationAccuracy.Best);
-                location = await Geolocation.GetLocationAsync(locationRequest);
+                (bindingContext as MeteoListViewModel).IsBusy = true; // Inizia il caricamento
+                var permissions = await Permissions.CheckStatusAsync<Permissions.LocationWhenInUse>();
 
-                ReverseGeoCoding(bindingContext, location);
-            }
-            else
-            {
-                await Application.Current.MainPage.DisplayAlert("Permissions Error", "You have not granted the app permission to access your location.", "OK");
+                GeolocationRequest locationRequest;
+                Location location = null;
 
-                var requested = await Permissions.RequestAsync<Permissions.LocationWhenInUse>();
-
-                if (requested == PermissionStatus.Granted)
+                if (permissions == PermissionStatus.Granted)
                 {
                     locationRequest = new GeolocationRequest(GeolocationAccuracy.Best);
                     location = await Geolocation.GetLocationAsync(locationRequest);
@@ -40,11 +30,33 @@ namespace MeteoApp.service
                 }
                 else
                 {
-                    if (DeviceInfo.Platform == DevicePlatform.iOS || DeviceInfo.Platform == DevicePlatform.MacCatalyst)
-                        await Application.Current.MainPage.DisplayAlert("Location Required", "Location is required to share it. Please enable location for this app in Settings.", "OK");
+                    await Application.Current.MainPage.DisplayAlert("Permissions Error", "You have not granted the app permission to access your location.", "OK");
+
+                    var requested = await Permissions.RequestAsync<Permissions.LocationWhenInUse>();
+
+                    if (requested == PermissionStatus.Granted)
+                    {
+                        locationRequest = new GeolocationRequest(GeolocationAccuracy.Best);
+                        location = await Geolocation.GetLocationAsync(locationRequest);
+
+                        ReverseGeoCoding(bindingContext, location);
+                    }
                     else
-                        await Application.Current.MainPage.DisplayAlert("Location Required", "Location is required to share it. We'll ask again next time.", "OK");
+                    {
+                        if (DeviceInfo.Platform == DevicePlatform.iOS || DeviceInfo.Platform == DevicePlatform.MacCatalyst)
+                            await Application.Current.MainPage.DisplayAlert("Location Required", "Location is required to share it. Please enable location for this app in Settings.", "OK");
+                        else
+                            await Application.Current.MainPage.DisplayAlert("Location Required", "Location is required to share it. We'll ask again next time.", "OK");
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Errore nell'acquisizione della posizione: {ex.Message}");
+            }
+            finally
+            {
+                (bindingContext as MeteoListViewModel).IsBusy = false; // Fine del caricamento
             }
         }
 
@@ -108,6 +120,15 @@ namespace MeteoApp.service
 
             // Sostituisci la collezione e chiama OnPropertyChanged
             meteoListViewModelContext.Entries = newEntries;
+        }
+
+        public void AddToDBPersonalLocation(BaseViewModel bindingContext, Entry personalEntry)
+        {
+            MeteoListViewModel meteoListViewModelContext = bindingContext as MeteoListViewModel;
+
+            meteoListViewModelContext.Entries.Add(personalEntry);
+
+            App.Database.SaveEntry(personalEntry);          
         }
     }
 }
