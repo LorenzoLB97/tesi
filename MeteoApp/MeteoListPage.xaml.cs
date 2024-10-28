@@ -29,6 +29,7 @@ public partial class MeteoListPage : Shell
     {
         Routes.Add("entrydetails", typeof(MeteoItemPage));
         Routes.Add(nameof(TestPage), typeof(TestPage)); // Aggiungi la nuova pagina TestPage
+        Routes.Add(nameof(MapPage), typeof(MapPage));
 
         foreach (var item in Routes)
             Routing.RegisterRoute(item.Key, item.Value);
@@ -52,10 +53,11 @@ public partial class MeteoListPage : Shell
     /**
      * A questo metodo va aggiunta la mappa di google maps
      */
-    private void OnItemAdded(object sender, EventArgs e)
+    private async void OnItemAdded(object sender, EventArgs e)
     {
         //_ = ShowPrompt();     
         //_ = AddPersonalLocation();
+        await Shell.Current.GoToAsync(nameof(MapPage));
     }
 
     private async Task ShowPrompt()
@@ -68,46 +70,7 @@ public partial class MeteoListPage : Shell
      */
     private void AddPersonalLocation()
     {
-        /*MeteoListViewModel meteoListViewModel = BindingContext as MeteoListViewModel;
-        List<Entry> entries = App.Database.GetEntries();
-
-        if (entries.Count == 1) //non ci sono personalLocations, ne crea di nuove
-        {
-
-            Entry personalEntry1 = new Entry
-            {
-                Id = 2,
-                CompleteAddress = "123 Main St, Anytown, AT 12345",
-                Street = "Main St",
-                City = "Anytown",
-                PostalCode = "12345",
-                Country = "AT"
-            };
-
-            var personalEntry2 = new Entry
-            {
-                Id = 3,
-                CompleteAddress = "456 Elm St, Springville, SP 54321",
-                Street = "Elm St",
-                City = "Springville",
-                PostalCode = "54321",
-                Country = "SP"
-            };
-
-            var personalEntry3 = new Entry
-            {
-                Id = 4,
-                CompleteAddress = "789 Oak Ave, Maple City, MC 67890",
-                Street = "Oak Ave",
-                City = "Maple City",
-                PostalCode = "67890",
-                Country = "MC"
-            };
-
-            geoLocationService.AddToDBPersonalLocation(BindingContext as BaseViewModel, personalEntry1);
-            geoLocationService.AddToDBPersonalLocation(BindingContext as BaseViewModel, personalEntry2);
-            geoLocationService.AddToDBPersonalLocation(BindingContext as BaseViewModel, personalEntry3);
-        }*/       
+        
     }
 
     private async void OnTestPageClicked(object sender, EventArgs e)

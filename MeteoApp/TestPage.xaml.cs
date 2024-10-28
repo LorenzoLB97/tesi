@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Map = Microsoft.Maui.Controls.Maps.Map;
 
 namespace MeteoApp
 {
@@ -11,6 +12,8 @@ namespace MeteoApp
         public TestPage()
         {
             InitializeComponent();
+
+            
         }
     }
 }
