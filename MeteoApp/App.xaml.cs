@@ -33,14 +33,14 @@ public partial class App : Application
     {
         base.OnStart();
 
-        loadDBEntries();
+        LoadDBEntries();
         
         var reference = MainPage as MeteoListPage;
 
         reference.GetCurrentLocation();
     }
 
-    private async void loadDBEntries()
+    private void LoadDBEntries()
     {
         MeteoListPage reference = MainPage as MeteoListPage;
         Debug.WriteLine("AAAAAAAAAAAAAAA QUI1");

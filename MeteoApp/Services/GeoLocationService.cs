@@ -10,7 +10,6 @@ namespace MeteoApp.service
 {
     public class GeoLocationService
     {
-        private int currentLocationId = 1;
         public async Task GetCurrentLocation(BaseViewModel bindingContext)
         {
             try
@@ -26,7 +25,7 @@ namespace MeteoApp.service
                     locationRequest = new GeolocationRequest(GeolocationAccuracy.Best);
                     location = await Geolocation.GetLocationAsync(locationRequest);
 
-                    ReverseGeoCoding(bindingContext, location);
+                    await ReverseGeoCoding(bindingContext, location);
                 }
                 else
                 {
@@ -39,7 +38,7 @@ namespace MeteoApp.service
                         locationRequest = new GeolocationRequest(GeolocationAccuracy.Best);
                         location = await Geolocation.GetLocationAsync(locationRequest);
 
-                        ReverseGeoCoding(bindingContext, location);
+                        await ReverseGeoCoding(bindingContext, location);
                     }
                     else
                     {

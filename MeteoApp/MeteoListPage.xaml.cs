@@ -18,7 +18,7 @@ public partial class MeteoListPage : Shell
 		InitializeComponent();
         RegisterRoutes();
 
-        /**
+        /*
          * Qualsiasi operazione di Binding nel contesto di questa pagina farà
          * riferimento a MeteoListViewModel, in questo caso le entries
          */
@@ -49,11 +49,13 @@ public partial class MeteoListPage : Shell
             Shell.Current.GoToAsync($"entrydetails", navigationParameter);
         }
     }
-
+    /**
+     * A questo metodo va aggiunta la mappa di google maps
+     */
     private void OnItemAdded(object sender, EventArgs e)
     {
-        //_ = ShowPrompt();
-        _ = AddPersonalLocation();
+        //_ = ShowPrompt();     
+        //_ = AddPersonalLocation();
     }
 
     private async Task ShowPrompt()
@@ -61,9 +63,12 @@ public partial class MeteoListPage : Shell
         await DisplayAlert("Add City", "To Be Implemented", "OK");
     }
 
-    private async Task AddPersonalLocation()
+    /**
+     * Va sostituito con una nuova pagina che apre una mappa di google maps
+     */
+    private void AddPersonalLocation()
     {
-        MeteoListViewModel meteoListViewModel = BindingContext as MeteoListViewModel;
+        /*MeteoListViewModel meteoListViewModel = BindingContext as MeteoListViewModel;
         List<Entry> entries = App.Database.GetEntries();
 
         if (entries.Count == 1) //non ci sono personalLocations, ne crea di nuove
@@ -102,7 +107,7 @@ public partial class MeteoListPage : Shell
             geoLocationService.AddToDBPersonalLocation(BindingContext as BaseViewModel, personalEntry1);
             geoLocationService.AddToDBPersonalLocation(BindingContext as BaseViewModel, personalEntry2);
             geoLocationService.AddToDBPersonalLocation(BindingContext as BaseViewModel, personalEntry3);
-        }            
+        }*/       
     }
 
     private async void OnTestPageClicked(object sender, EventArgs e)
@@ -111,8 +116,8 @@ public partial class MeteoListPage : Shell
         await Shell.Current.GoToAsync(nameof(TestPage));
     }
 
-    public void GetCurrentLocation()
+    public async void GetCurrentLocation()
     {
-        geoLocationService.GetCurrentLocation(BindingContext as BaseViewModel);
+        await geoLocationService.GetCurrentLocation(BindingContext as BaseViewModel);
     }
 }
