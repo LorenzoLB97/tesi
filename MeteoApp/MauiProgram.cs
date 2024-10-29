@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using MeteoApp.Services;
 
 namespace MeteoApp;
 
@@ -14,9 +15,14 @@ public static class MauiProgram
 				fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
 				fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
 			})
-			.UseMauiMaps();
+			.UseMauiMaps();			
 
-        
+			// Registra il servizio come singleton
+			// Le funzioni di GeoLocation servono in tutto il codice, renderlo un singleton é 
+			// l'approccio più semplice ed efficiente.
+			builder.Services.AddSingleton<GeoLocationService>();
+			// Registra MeteoListPage per Dependency Injection
+			builder.Services.AddTransient<MeteoListPage>();
 
 #if DEBUG
         builder.Logging.AddDebug();

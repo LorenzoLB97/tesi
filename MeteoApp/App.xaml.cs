@@ -5,6 +5,8 @@ namespace MeteoApp;
 
 public partial class App : Application
 {
+    public static IServiceProvider Services { get; private set; }
+
     private static MyDatabase _database; // Variabile privata per memorizzare l'istanza
 
     public static MyDatabase Database
@@ -20,13 +22,15 @@ public partial class App : Application
         }
     }
 
-    public App()
+    public App(IServiceProvider services)
 	{
         SQLitePCL.Batteries_V2.Init(); // Inizializza SQLite
         InitializeComponent();
+        Services = services;
 
-		MainPage = new MeteoListPage();
-	}
+        // Usa il provider di servizi per creare l'istanza di MeteoListPage
+        MainPage = services.GetRequiredService<MeteoListPage>();
+    }
 
     // Metodo che viene eseguito quando l'app si avvia (solo avvio, non ripresa dopo standby)
     protected override void OnStart()

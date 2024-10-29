@@ -1,7 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
-using MeteoApp.service;
+using MeteoApp.Services;
 
 namespace MeteoApp;
 
@@ -10,20 +10,41 @@ namespace MeteoApp;
  */
 public partial class MeteoListPage : Shell
 {
-    private readonly GeoLocationService geoLocationService = new GeoLocationService();
+    private readonly GeoLocationService _geoLocationService;
+    private MeteoListViewModel _viewModel;
+
     public Dictionary<string, Type> Routes { get; private set; } = new Dictionary<string, Type>();
 
-    public MeteoListPage()
+    public MeteoListPage(GeoLocationService geoLocationService)
 	{
 		InitializeComponent();
+
         RegisterRoutes();
+        _geoLocationService = geoLocationService;
 
         /*
          * Qualsiasi operazione di Binding nel contesto di questa pagina farà
          * riferimento a MeteoListViewModel, in questo caso le entries
          */
-        BindingContext = new MeteoListViewModel();
+        _viewModel = new MeteoListViewModel();
+        BindingContext = _viewModel; // Imposta il ViewModel come BindingContext
+
+        // Aggiungi l'evento Navigated di Shell
+        this.Navigated += OnNavigated;
     }
+
+    // Metodo che verrà chiamato quando la pagina è attiva dopo la navigazione
+    private void OnNavigated(object sender, ShellNavigatedEventArgs e)
+    {
+        Debug.WriteLine("XXXXXXXXXXX OnNavigated  " + Shell.Current.CurrentPage.GetType().FullName);
+        // Verifica se la pagina corrente è MeteoListPage confrontando l'istanza, metodo poco ortodosso lo so
+        // ma é l'unico che funziona
+        if(Shell.Current.CurrentPage.GetType().FullName.Equals("Microsoft.Maui.Controls.ContentPage"))
+        {
+            Debug.WriteLine("YYYYYYYYYYYYYYYY MeteoListPage è ora visibile, eseguo il refresh delle entries.");
+            ReloadEntries();
+        }
+    }   
 
     private void RegisterRoutes()
     {
@@ -65,14 +86,6 @@ public partial class MeteoListPage : Shell
         await DisplayAlert("Add City", "To Be Implemented", "OK");
     }
 
-    /**
-     * Va sostituito con una nuova pagina che apre una mappa di google maps
-     */
-    private void AddPersonalLocation()
-    {
-        
-    }
-
     private async void OnTestPageClicked(object sender, EventArgs e)
     {
         // Naviga alla pagina TestPage
@@ -81,6 +94,12 @@ public partial class MeteoListPage : Shell
 
     public async void GetCurrentLocation()
     {
-        await geoLocationService.GetCurrentLocation(BindingContext as BaseViewModel);
+        await _geoLocationService.GetCurrentLocation(BindingContext as BaseViewModel);
+    }
+
+    private void ReloadEntries()
+    {
+        Debug.WriteLine("XXXXXXXXXXXXXXXX RELOAD ENTRIES MeteoListPage è ora visibile, entries aggiornate tramite OnNavigated.");
+        _viewModel.RefreshEntries();
     }
 }
