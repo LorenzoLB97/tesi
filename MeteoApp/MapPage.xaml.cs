@@ -24,11 +24,12 @@ public partial class MapPage : ContentPage
 
     async void OnMapClicked(object sender, MapClickedEventArgs e)
     {
+        
         //Questo codice non é una ripetizione ridondante: purtroppo il metodo geocoding getplacemarkAsync ci mette molto tempo
         //e riscrivere il codice di reverse geo coding qui velocizza il processo
         System.Diagnostics.Debug.WriteLine("AAAAAAAAAAAAAAAAAAAA" + $"MapClick: {e.Location.Latitude}, {e.Location.Longitude}");
 
-        var placemarks = await Geocoding.GetPlacemarksAsync(e.Location.Latitude, e.Location.Longitude); 
+        var placemarks = await Geocoding.GetPlacemarksAsync(e.Location.Latitude, e.Location.Longitude);
         var placemark = placemarks?.FirstOrDefault();
 
         System.Diagnostics.Debug.WriteLine(" FINALLY XXXXXXXXXXXXXXXXXXX" + $"MapClick: {e.Location.Latitude}, {e.Location.Longitude}");
@@ -57,6 +58,6 @@ public partial class MapPage : ContentPage
         {
             // Mostra un messaggio di errore se l'indirizzo non è disponibile
             await DisplayAlert("Errore", "Non è stato possibile determinare l'indirizzo.", "OK");
-        }
+        }        
     }
 }

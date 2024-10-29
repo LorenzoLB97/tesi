@@ -65,63 +65,39 @@ public class GeoLocationService
 
     public async static Task<Entry> ReverseGeoCoding(Location location, int timeoutMilliseconds = 50000)
     {
-        Debug.WriteLine(" qui 1 XXXXXXXXXXXXXXXXXXX");
-
-        try
+        
+        using (var cts = new CancellationTokenSource(timeoutMilliseconds))
         {
-            using (var cts = new CancellationTokenSource(timeoutMilliseconds))
+            var placemarks = await Geocoding.GetPlacemarksAsync(location.Latitude, location.Longitude).WaitAsync(cts.Token);
+            var placemark = placemarks?.FirstOrDefault();
+
+            if (placemark != null)
             {
-                var placemarks = await Geocoding.GetPlacemarksAsync(location.Latitude, location.Longitude).WaitAsync(cts.Token);
-                var placemark = placemarks?.FirstOrDefault();
+                string completeAddress = $"{placemark.Thoroughfare}, {placemark.Locality}, {placemark.PostalCode}, {placemark.CountryName}";
+                string street = placemark.Thoroughfare;
+                string city = placemark.Locality;
+                string postalCode = placemark.PostalCode;
+                string country = placemark.CountryName;
 
-                Debug.WriteLine("qui 2 XXXXXXXXXXXXXXXXXXX");
+                await Application.Current.MainPage.DisplayAlert("Location Address", $"Address: {completeAddress}", "OK");
 
-                if (placemark != null)
+                return new Entry
                 {
-                    Debug.WriteLine("Qui6");
-                    string completeAddress = $"{placemark.Thoroughfare}, {placemark.Locality}, {placemark.PostalCode}, {placemark.CountryName}";
-                    string street = placemark.Thoroughfare;
-                    string city = placemark.Locality;
-                    string postalCode = placemark.PostalCode;
-                    string country = placemark.CountryName;
-
-                    await Application.Current.MainPage.DisplayAlert("Location Address", $"Address: {completeAddress}", "OK");
-
-                    return new Entry
-                    {
-                        Id = App.Database.GetCurrentLocationId(),
-                        CompleteAddress = completeAddress,
-                        Street = street,
-                        City = city,
-                        PostalCode = postalCode,
-                        Country = country
-                    };
-                }
-                else
-                {
-                    await Application.Current.MainPage.DisplayAlert("Location Address", "Non é stato possibile determinare l'address", "OK");
-                    return null;
-                }
+                    Id = App.Database.GetCurrentLocationId(),
+                    CompleteAddress = completeAddress,
+                    Street = street,
+                    City = city,
+                    PostalCode = postalCode,
+                    Country = country
+                };
+            }
+            else
+            {
+                await Application.Current.MainPage.DisplayAlert("Location Address", "Non é stato possibile determinare l'address", "OK");
+                return null;
             }
         }
-        catch (OperationCanceledException)
-        {
-            Debug.WriteLine("Timeout scaduto per il Reverse GeoCoding.");
-            await Application.Current.MainPage.DisplayAlert("Timeout", "La richiesta di geocodifica inversa ha superato il tempo limite", "OK");
-            return null;
-        }
     }
-
-    /*public async static Task<Entry> GetEntryFromLocation(Location location)
-    {
-        // Utilizza il Reverse Geocoding per ottenere l'indirizzo
-        var placemarks = await Geocoding.GetPlacemarksAsync(location.Latitude, location.Longitude);
-        var placemark = placemarks?.FirstOrDefault();
-
-
-
-        return null;
-    }*/
 
     /**
      * La currentLocation deve sostituire quella già presente nel DB
