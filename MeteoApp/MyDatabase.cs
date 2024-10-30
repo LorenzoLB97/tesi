@@ -37,7 +37,6 @@ namespace MeteoApp
             var dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "MyDatabase.db");
             Database = new SQLiteConnection(dbPath);
             Database.CreateTable<Entry>();
-            //_database.CreateTable<CurrentLocationEntry>();           
         }
 
         public List<Entry> GetEntries()

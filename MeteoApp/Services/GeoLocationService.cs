@@ -11,7 +11,6 @@ namespace MeteoApp.Services;
 public class GeoLocationService
 {
     private static GeoLocationService _instance;
-
     public static GeoLocationService Instance => _instance ??= App.Services.GetRequiredService<GeoLocationService>();
 
     public async Task GetCurrentLocation(BaseViewModel bindingContext)
@@ -64,8 +63,7 @@ public class GeoLocationService
     }
 
     public async static Task<Entry> ReverseGeoCoding(Location location, int timeoutMilliseconds = 50000)
-    {
-        
+    {        
         using (var cts = new CancellationTokenSource(timeoutMilliseconds))
         {
             var placemarks = await Geocoding.GetPlacemarksAsync(location.Latitude, location.Longitude).WaitAsync(cts.Token);
