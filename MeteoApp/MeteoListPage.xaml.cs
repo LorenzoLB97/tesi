@@ -96,4 +96,18 @@ public partial class MeteoListPage : Shell
     {
         _viewModel.RefreshEntries();
     }
+
+    private void OnDeleteButtonClicked(object sender, EventArgs e)
+    {
+        // Ottiene l'entry associata al pulsante
+        var button = sender as Button;
+        var entryToDelete = button?.CommandParameter as Entry;
+
+        if (entryToDelete != null)
+        {
+            // Rimuove l'entry dal database e dall'ObservableCollection
+            //(BindingContext as MeteoListViewModel).DeleteEntry(entryToDelete);
+            Debug.WriteLine("XXXXXXXXXXXXXXXXXXXXX funziona");
+        }
+    }
 }

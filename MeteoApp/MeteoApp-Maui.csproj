@@ -98,5 +98,6 @@
 	</ItemGroup>
 	<ItemGroup>
 	  <PackageReference Update="Microsoft.Maui.Controls.Compatibility" Version="8.0.92" />
-	</ItemGroup>	
+	</ItemGroup>
+	<ProjectExtensions><VisualStudio><UserProperties XamarinHotReloadGenericExceptionInfoBarMeteoAppMauiHideInfoBar="True" /></VisualStudio></ProjectExtensions>	
 </Project>

@@ -7,34 +7,43 @@
             <ToolbarItem Text="Add" Clicked="OnItemAdded" />
         </ContentPage.ToolbarItems>
 
-        <StackLayout Margin="20">
-            <!-- ActivityIndicator per mostrare il caricamento -->
-            <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" Color="Blue" />
+        <ScrollView>
+            <StackLayout Margin="20">
+                <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" Color="Blue" />
 
-            <!-- CollectionView per la lista delle Entries -->
-            <CollectionView x:Name="zCollectionView" ItemsSource="{Binding Entries}" SelectionMode="Single" SelectionChanged="OnListItemSelected">
-                <CollectionView.ItemTemplate>
-                    <DataTemplate>
-                        <!-- Usare Grid per evitare l'uso di Frame e mantenere un layout ordinato -->
-                        <Grid Padding="10" Margin="5" BackgroundColor="LightGray">
-                            <!-- Definisce due righe per la centratura del contenuto -->
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="*" />
-                            </Grid.RowDefinitions>
+                <!-- CollectionView con bottone Delete per ogni elemento -->
+                <CollectionView x:Name="zCollectionView" ItemsSource="{Binding Entries}" SelectionMode="Single" SelectionChanged="OnListItemSelected">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Padding="10" Margin="5" BackgroundColor="LightGray">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
 
-                            <!-- Etichetta centrata orizzontalmente e verticalmente -->
-                            <Label Grid.Row="1"
-                                   Text="{Binding CompleteAddress}"
-                                   VerticalTextAlignment="Center"
-                                   HorizontalOptions="CenterAndExpand"
-                                   HorizontalTextAlignment="Center"
-                                   LineBreakMode="WordWrap"
-                                   FontSize="Medium" />
-                        </Grid>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
-        </StackLayout>
+                                <Label Grid.Row="0"
+                                       Text="{Binding CompleteAddress}"
+                                       VerticalTextAlignment="Center"
+                                       HorizontalOptions="CenterAndExpand"
+                                       HorizontalTextAlignment="Center"
+                                       LineBreakMode="WordWrap"
+                                       FontSize="Medium" />
+
+                                <!-- Bottone Delete in basso a sinistra, più piccolo -->
+                                <Button Text="Delete"
+                                        Grid.Row="1"
+                                        HorizontalOptions="End"
+                                        VerticalOptions="End"
+                                        WidthRequest="80"
+                                        HeightRequest="50"
+                                        FontSize="Small"
+                                        Clicked="OnDeleteButtonClicked"
+                                        CommandParameter="{Binding .}" />
+                            </Grid>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </StackLayout>
+        </ScrollView>
     </ContentPage>
 </Shell>
