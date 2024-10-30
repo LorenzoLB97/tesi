@@ -36,12 +36,10 @@ public partial class MeteoListPage : Shell
     // Metodo che verrà chiamato quando la pagina è attiva dopo la navigazione
     private void OnNavigated(object sender, ShellNavigatedEventArgs e)
     {
-        Debug.WriteLine("XXXXXXXXXXX OnNavigated  " + Shell.Current.CurrentPage.GetType().FullName);
         // Verifica se la pagina corrente è MeteoListPage confrontando l'istanza, metodo poco ortodosso lo so
         // ma é l'unico che funziona
         if(Shell.Current.CurrentPage.GetType().FullName.Equals("Microsoft.Maui.Controls.ContentPage"))
         {
-            Debug.WriteLine("YYYYYYYYYYYYYYYY MeteoListPage è ora visibile, eseguo il refresh delle entries.");
             ReloadEntries();
         }
     }   
@@ -58,7 +56,6 @@ public partial class MeteoListPage : Shell
 
     private void OnListItemSelected(object sender, SelectionChangedEventArgs e)
     {
-        Debug.WriteLine("CLICCATO SU ITEM");
         if (e.CurrentSelection.FirstOrDefault() != null)
         {
             Entry entry = e.CurrentSelection.FirstOrDefault() as Entry;
@@ -76,8 +73,6 @@ public partial class MeteoListPage : Shell
      */
     private async void OnItemAdded(object sender, EventArgs e)
     {
-        //_ = ShowPrompt();     
-        //_ = AddPersonalLocation();
         await Shell.Current.GoToAsync(nameof(MapPage));
     }
 
@@ -99,7 +94,6 @@ public partial class MeteoListPage : Shell
 
     private void ReloadEntries()
     {
-        Debug.WriteLine("XXXXXXXXXXXXXXXX RELOAD ENTRIES MeteoListPage è ora visibile, entries aggiornate tramite OnNavigated.");
         _viewModel.RefreshEntries();
     }
 }

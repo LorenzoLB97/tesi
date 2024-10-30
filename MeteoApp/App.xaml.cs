@@ -8,6 +8,8 @@ public partial class App : Application
     public static IServiceProvider Services { get; private set; }
 
     private static MyDatabase _database; // Variabile privata per memorizzare l'istanza
+    private readonly MeteoListPage _mainPage;
+
 
     public static MyDatabase Database
     {
@@ -28,8 +30,12 @@ public partial class App : Application
         InitializeComponent();
         Services = services;
 
-        // Usa il provider di servizi per creare l'istanza di MeteoListPage
-        MainPage = services.GetRequiredService<MeteoListPage>();
+        // Inietta le dipendenze tramite il provider di servizi
+        _database = services.GetRequiredService<MyDatabase>();
+        _mainPage = services.GetRequiredService<MeteoListPage>();
+
+        // Imposta la pagina principale come _mainPage
+        MainPage = _mainPage;
     }
 
     // Metodo che viene eseguito quando l'app si avvia (solo avvio, non ripresa dopo standby)
@@ -37,28 +43,22 @@ public partial class App : Application
     {
         base.OnStart();
 
+        // Carica le entries del database
         LoadDBEntries();
-        
-        var reference = MainPage as MeteoListPage;
 
-        reference.GetCurrentLocation();
+        // Chiama GetCurrentLocation nella pagina principale
+        _mainPage.GetCurrentLocation();
     }
 
     private void LoadDBEntries()
     {
-        MeteoListPage reference = MainPage as MeteoListPage;
-        Debug.WriteLine("AAAAAAAAAAAAAAA QUI1");
+        var reference = _mainPage as MeteoListPage;
 
-        if (_database != null)
+        ObservableCollection<Entry> loadedEntries = new ObservableCollection<Entry>(_database.GetEntries());
+
+        if (loadedEntries.Count > 1) //esistono già delle personalEntries
         {
-            Debug.WriteLine("AAAAAAAAAAAAAAA QUI2");
-
-            ObservableCollection<Entry> loadedEntries = new ObservableCollection<Entry>(Database.GetEntries());
-
-            if (loadedEntries.Count > 1) //esistono già delle personalEntries
-            {
-                (reference.BindingContext as MeteoListViewModel).Entries = loadedEntries;
-            }
+            (reference.BindingContext as MeteoListViewModel).Entries = loadedEntries;
         }
     }
 }

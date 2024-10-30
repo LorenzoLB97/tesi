@@ -21,8 +21,11 @@ public static class MauiProgram
 			// Le funzioni di GeoLocation servono in tutto il codice, renderlo un singleton é 
 			// l'approccio più semplice ed efficiente.
 			builder.Services.AddSingleton<GeoLocationService>();
+			// Registra MyDatabase come singleton per DI
+			builder.Services.AddSingleton<MyDatabase>();
 			// Registra MeteoListPage per Dependency Injection
 			builder.Services.AddTransient<MeteoListPage>();
+
 
 #if DEBUG
         builder.Logging.AddDebug();

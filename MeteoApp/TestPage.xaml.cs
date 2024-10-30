@@ -11,9 +11,7 @@ namespace MeteoApp
     {
         public TestPage()
         {
-            InitializeComponent();
-
-            
+            InitializeComponent();            
         }
     }
 }

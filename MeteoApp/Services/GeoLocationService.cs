@@ -62,39 +62,38 @@ public class GeoLocationService
         }
     }
 
-    public async static Task<Entry> ReverseGeoCoding(Location location, int timeoutMilliseconds = 50000)
-    {        
-        using (var cts = new CancellationTokenSource(timeoutMilliseconds))
+    public async static Task<Entry> ReverseGeoCoding(Location location)
+    {                
+        var placemarks = await Geocoding.GetPlacemarksAsync(location.Latitude, location.Longitude);
+        var placemark = placemarks?.FirstOrDefault();
+
+        if (placemark != null)
         {
-            var placemarks = await Geocoding.GetPlacemarksAsync(location.Latitude, location.Longitude).WaitAsync(cts.Token);
-            var placemark = placemarks?.FirstOrDefault();
+            string completeAddress = $"{placemark.Thoroughfare}, {placemark.Locality}, {placemark.PostalCode}, {placemark.CountryName}";
+            string street = placemark.Thoroughfare;
+            string city = placemark.Locality;
+            string postalCode = placemark.PostalCode;
+            string country = placemark.CountryName;
+            double latitude = placemark.Location.Latitude;
+            double longitude = placemark.Location.Longitude;
 
-            if (placemark != null)
+            return new Entry
             {
-                string completeAddress = $"{placemark.Thoroughfare}, {placemark.Locality}, {placemark.PostalCode}, {placemark.CountryName}";
-                string street = placemark.Thoroughfare;
-                string city = placemark.Locality;
-                string postalCode = placemark.PostalCode;
-                string country = placemark.CountryName;
-
-                await Application.Current.MainPage.DisplayAlert("Location Address", $"Address: {completeAddress}", "OK");
-
-                return new Entry
-                {
-                    Id = App.Database.GetCurrentLocationId(),
-                    CompleteAddress = completeAddress,
-                    Street = street,
-                    City = city,
-                    PostalCode = postalCode,
-                    Country = country
-                };
-            }
-            else
-            {
-                await Application.Current.MainPage.DisplayAlert("Location Address", "Non é stato possibile determinare l'address", "OK");
-                return null;
-            }
+                Id = App.Database.GetCurrentLocationId(),
+                CompleteAddress = completeAddress,
+                Street = street,
+                City = city,
+                PostalCode = postalCode,
+                Country = country,
+                Latitude = latitude,
+                Longitude = longitude
+            };
         }
+        else
+        {
+            await Application.Current.MainPage.DisplayAlert("Location Address", "Non é stato possibile determinare l'address", "OK");
+            return null;
+        }        
     }
 
     /**

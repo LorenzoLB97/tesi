@@ -12,6 +12,8 @@ namespace MeteoApp
         private string _city;
         private string _postalCode;
         private string _country;
+        private double _latitude;
+        private double _longitude;
 
         public string CompleteAddress
         {
@@ -41,6 +43,18 @@ namespace MeteoApp
         {
             get => _country;
             set => _country = value;
+        }
+        
+        public double Latitude
+        {
+            get => _latitude;
+            set => _latitude = value;
+        }
+
+        public double Longitude
+        {
+            get => _longitude;
+            set => _longitude = value;
         }
 
         // Override del metodo Equals per il confronto degli oggetti Entry
