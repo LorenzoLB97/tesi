@@ -56,28 +56,12 @@ namespace MeteoApp
         {
             List<Entry> newEntries = App.Database.GetEntries();
             if (_entries.Count == newEntries.Count) {
-                Debug.WriteLine("STESSO COUNTER -> ERRORE");
                 return;
             }
 
             if (!_entries.Equals(newEntries))
             {
-                //CheckEntries(newEntries);
                 Entries = new ObservableCollection<Entry>(newEntries);
-            }
-        }
-
-        private void CheckEntries(List<Entry> newEntries)
-        {
-            Debug.WriteLine("é ENTRATO IN CHECKENTRIES");
-            for (int i=0; i<_entries.Count; i++)
-            {
-                if (!newEntries[i].Equals(_entries[i]))
-                {
-                    Debug.WriteLine("YYYYY SOSTITUISCE LE ENTRIES: SUCCESS");
-                    _entries = new ObservableCollection<Entry>(newEntries);
-                    return;
-                }
             }
         }
     }
