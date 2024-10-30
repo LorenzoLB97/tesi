@@ -11,11 +11,11 @@ namespace MeteoApp;
 public partial class MeteoListPage : Shell
 {
     private readonly GeoLocationService _geoLocationService;
-    private MeteoListViewModel _viewModel;
+    private readonly MeteoListViewModel _viewModel;
 
     public Dictionary<string, Type> Routes { get; private set; } = new Dictionary<string, Type>();
 
-    public MeteoListPage(GeoLocationService geoLocationService)
+    public MeteoListPage(MyDatabase myDatabase, GeoLocationService geoLocationService)
 	{
 		InitializeComponent();
 
@@ -26,7 +26,7 @@ public partial class MeteoListPage : Shell
          * Qualsiasi operazione di Binding nel contesto di questa pagina farà
          * riferimento a MeteoListViewModel, in questo caso le entries
          */
-        _viewModel = new MeteoListViewModel();
+        _viewModel = new MeteoListViewModel(myDatabase);
         BindingContext = _viewModel; // Imposta il ViewModel come BindingContext
 
         // Aggiungi l'evento Navigated di Shell

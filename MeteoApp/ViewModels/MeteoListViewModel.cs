@@ -9,6 +9,8 @@ namespace MeteoApp
     public class MeteoListViewModel : BaseViewModel
     {
         private bool _isBusy;
+        private readonly MyDatabase _database;
+
         /**
          * location aggiunte tramite bottone add
          * */
@@ -39,11 +41,12 @@ namespace MeteoApp
             }
         }
 
-        public MeteoListViewModel()
+        public MeteoListViewModel(MyDatabase database)
         {
+            _database = database;
             Entries = new ObservableCollection<Entry>();
 
-            List<Entry> dbEntries = App.Database.GetEntries();
+            List<Entry> dbEntries = _database.GetEntries();
 
             for (var i = 0; i < dbEntries.Count; i++)
             {
@@ -54,7 +57,7 @@ namespace MeteoApp
         // Metodo per aggiornare le entries ogni volta che la pagina viene visualizzata
         public void RefreshEntries()
         {
-            List<Entry> newEntries = App.Database.GetEntries();
+            List<Entry> newEntries = _database.GetEntries();
             if (_entries.Count == newEntries.Count) {
                 return;
             }

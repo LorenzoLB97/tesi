@@ -7,22 +7,8 @@ public partial class App : Application
 {
     public static IServiceProvider Services { get; private set; }
 
-    private static MyDatabase _database; // Variabile privata per memorizzare l'istanza
+    private readonly MyDatabase _database; // Variabile privata per memorizzare l'istanza
     private readonly MeteoListPage _mainPage;
-
-
-    public static MyDatabase Database
-    {
-        get
-        {
-            // Se il database non è ancora stato inizializzato, crealo
-            if (_database == null)
-                _database = new MyDatabase();
-
-            // Restituisci l'istanza del database
-            return _database;
-        }
-    }
 
     public App(IServiceProvider services)
 	{

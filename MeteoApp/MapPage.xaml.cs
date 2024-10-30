@@ -8,9 +8,14 @@ namespace MeteoApp;
 
 public partial class MapPage : ContentPage
 {
-    public MapPage()
+    private readonly GeoLocationService _geoLocationService;
+    private readonly MyDatabase _database;
+    public MapPage(GeoLocationService geoLocationService, MyDatabase database)
     {
         InitializeComponent();
+
+        _geoLocationService = geoLocationService;
+        _database = database;
 
         Map map = new Map()
         {
@@ -22,7 +27,7 @@ public partial class MapPage : ContentPage
 
     async void OnMapClicked(object sender, MapClickedEventArgs e)
     {
-        Entry newEntry = await GeoLocationService.ReverseGeoCoding(e.Location);
+        Entry newEntry = await _geoLocationService.ReverseGeoCoding(e.Location);
         //Richiesta all'utente di conferma della location
         if (newEntry != null)
         {
@@ -38,7 +43,7 @@ public partial class MapPage : ContentPage
             if (isConfirmed)
             {
                 // Chiama la funzione per salvare la location, sostituendo GeoLocationService con la logica corretta
-                App.Database.SaveEntry(newEntry);
+                _database.SaveEntry(newEntry);
                 await DisplayAlert("Successo", "Location aggiunta con successo!", "OK");
             }
         }

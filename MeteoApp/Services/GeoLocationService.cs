@@ -10,8 +10,12 @@ namespace MeteoApp.Services;
 
 public class GeoLocationService
 {
-    private static GeoLocationService _instance;
-    public static GeoLocationService Instance => _instance ??= App.Services.GetRequiredService<GeoLocationService>();
+    private readonly MyDatabase _database;
+
+    public GeoLocationService(MyDatabase database)
+    {
+        _database = database;
+    }
 
     public async Task GetCurrentLocation(BaseViewModel bindingContext)
     {
@@ -62,7 +66,7 @@ public class GeoLocationService
         }
     }
 
-    public async static Task<Entry> ReverseGeoCoding(Location location)
+    public async Task<Entry> ReverseGeoCoding(Location location)
     {                
         var placemarks = await Geocoding.GetPlacemarksAsync(location.Latitude, location.Longitude);
         var placemark = placemarks?.FirstOrDefault();
@@ -79,7 +83,7 @@ public class GeoLocationService
 
             return new Entry
             {
-                Id = App.Database.GetCurrentLocationId(),
+                Id = _database.GetCurrentLocationId(),
                 CompleteAddress = completeAddress,
                 Street = street,
                 City = city,
@@ -106,7 +110,7 @@ public class GeoLocationService
     private void AddToDB(BaseViewModel bindingContext, Entry currentLocationEntry)
     {
         //Ok
-        App.Database.UpsertCurrentLocation(currentLocationEntry);
+        _database.UpsertCurrentLocation(currentLocationEntry);
 
         MeteoListViewModel meteoListViewModelContext = bindingContext as MeteoListViewModel;
 
@@ -123,14 +127,5 @@ public class GeoLocationService
 
         // Sostituisci la collezione e chiama OnPropertyChanged
         meteoListViewModelContext.Entries = newEntries;
-    }
-
-    public void AddToDBPersonalLocation(BaseViewModel bindingContext, Entry personalEntry)
-    {
-        MeteoListViewModel meteoListViewModelContext = bindingContext as MeteoListViewModel;
-
-        meteoListViewModelContext.Entries.Add(personalEntry);
-
-        App.Database.SaveEntry(personalEntry);          
     }
 }
