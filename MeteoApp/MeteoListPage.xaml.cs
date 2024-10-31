@@ -12,6 +12,7 @@ public partial class MeteoListPage : Shell
 {
     private readonly GeoLocationService _geoLocationService;
     private readonly MeteoListViewModel _viewModel;
+    private readonly MyDatabase _database;
 
     public Dictionary<string, Type> Routes { get; private set; } = new Dictionary<string, Type>();
 
@@ -21,6 +22,7 @@ public partial class MeteoListPage : Shell
 
         RegisterRoutes();
         _geoLocationService = geoLocationService;
+        _database = myDatabase;
 
         /*
          * Qualsiasi operazione di Binding nel contesto di questa pagina farà
@@ -96,7 +98,10 @@ public partial class MeteoListPage : Shell
     {
         _viewModel.RefreshEntries();
     }
-
+    /**
+    * Bug da fixare: se viene eliminate la CurrentLocation
+    * Bisogna ricaricarla
+    */
     private void OnDeleteButtonClicked(object sender, EventArgs e)
     {
         // Ottiene l'entry associata al pulsante
@@ -106,8 +111,9 @@ public partial class MeteoListPage : Shell
         if (entryToDelete != null)
         {
             // Rimuove l'entry dal database e dall'ObservableCollection
-            //(BindingContext as MeteoListViewModel).DeleteEntry(entryToDelete);
-            Debug.WriteLine("XXXXXXXXXXXXXXXXXXXXX funziona");
+            //Funziona ma non si aggiorna la observable collection
+            _database.Remove(entryToDelete);
+            ReloadEntries();
         }
     }
 }
