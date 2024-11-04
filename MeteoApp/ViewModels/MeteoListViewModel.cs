@@ -67,7 +67,7 @@ namespace MeteoApp
             if (!_entries.Equals(newEntries))
             {
                 Debug.WriteLine("ZZZZZZZZZZZZZZZZZZZz");
-                Entries = new ObservableCollection<Entry>(newEntries);
+                Entries = new ObservableCollection<Entry>(newEntries);                
             }
         }
     }

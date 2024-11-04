@@ -94,8 +94,9 @@ public partial class MeteoListPage : Shell
         await _geoLocationService.GetCurrentLocation(BindingContext as BaseViewModel);
     }
 
-    private void ReloadEntries()
+    private async void ReloadEntries()
     {
+        await _geoLocationService.GetCurrentLocation(_viewModel);
         _viewModel.RefreshEntries();
     }
     /**
@@ -111,7 +112,7 @@ public partial class MeteoListPage : Shell
         if (entryToDelete != null && !entryToDelete.IsCurrentLocation)
         {
             // Rimuove l'entry dal database e dall'ObservableCollection
-            //Funziona ma non si aggiorna la observable collection
+            // Funziona ma non si aggiorna la observable collection
             _database.Remove(entryToDelete);
             ReloadEntries();
         }
