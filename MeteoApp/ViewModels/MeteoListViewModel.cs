@@ -62,8 +62,11 @@ namespace MeteoApp
                 return;
             }
 
+            //BUG: quando fa il reloading delle entries perché viene rivisualizzata ListPage
+            //aggiunge una nuova currentLocation, anche se esiste già quella precedente.
             if (!_entries.Equals(newEntries))
             {
+                Debug.WriteLine("ZZZZZZZZZZZZZZZZZZZz");
                 Entries = new ObservableCollection<Entry>(newEntries);
             }
         }

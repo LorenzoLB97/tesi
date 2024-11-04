@@ -108,12 +108,16 @@ public partial class MeteoListPage : Shell
         var button = sender as Button;
         var entryToDelete = button?.CommandParameter as Entry;
 
-        if (entryToDelete != null)
+        if (entryToDelete != null && !entryToDelete.IsCurrentLocation)
         {
             // Rimuove l'entry dal database e dall'ObservableCollection
             //Funziona ma non si aggiorna la observable collection
             _database.Remove(entryToDelete);
             ReloadEntries();
+        }
+        else if (entryToDelete.IsCurrentLocation)
+        {
+            DisplayAlert("Errore", "Non puoi eliminare la CurrentLocation", "Ok");
         }
     }
 }

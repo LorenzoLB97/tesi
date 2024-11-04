@@ -60,13 +60,13 @@ namespace MeteoApp
         /**
          * Questo metodo deve sostituire la currentLocation
          * Se la tabella é vuota, semplicemente aggiunge la nuova entry
-         * Se la tabella non é vuota, deve trovare la entry con id=1 (che é la CurrentLocation)
+         * Se la tabella non é vuota, deve trovare la entry isCurrentLocation=true (che é la CurrentLocation)
          * e sostuiturla con la nuova currentLocation.
          */
         public void UpsertCurrentLocation(Entry newCurrentLocationEntry)
         {
             // Trova la current location esistente
-            var existingEntry = Database.Find<Entry>(CurrentLocationEntryId);
+            var existingEntry = Database.Table<Entry>().FirstOrDefault(e => e.IsCurrentLocation);
 
             if (existingEntry != null) // Se la current location esiste già
             {

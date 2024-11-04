@@ -32,7 +32,10 @@ public class GeoLocationService
                 locationRequest = new GeolocationRequest(GeolocationAccuracy.Best);
                 location = await Geolocation.GetLocationAsync(locationRequest);
 
-                AddToDB(bindingContext, await ReverseGeoCoding(location));
+                Entry currentLocation = await ReverseGeoCoding(location);
+                currentLocation.IsCurrentLocation = true;
+
+                AddToDBCurrentLocation(bindingContext, currentLocation);
             }
             else
             {
@@ -45,7 +48,10 @@ public class GeoLocationService
                     locationRequest = new GeolocationRequest(GeolocationAccuracy.Best);
                     location = await Geolocation.GetLocationAsync(locationRequest);
 
-                    AddToDB(bindingContext, await ReverseGeoCoding(location));
+                    Entry currentLocation = await ReverseGeoCoding(location);
+                    currentLocation.IsCurrentLocation = true;
+
+                    AddToDBCurrentLocation(bindingContext, currentLocation);
                 }
                 else
                 {
@@ -107,8 +113,9 @@ public class GeoLocationService
      * ATTENZIONE! L'observable collection deve essere sostituita TOTALMENTE,
      * non basta fare add(entry) perché altrimenti non si attiva OnPropertyChange()
      */
-    private void AddToDB(BaseViewModel bindingContext, Entry currentLocationEntry)
+    private void AddToDBCurrentLocation(BaseViewModel bindingContext, Entry currentLocationEntry)
     {
+        //Inserisce o aggiorna con la nuova currentLocation
         //Ok
         _database.UpsertCurrentLocation(currentLocationEntry);
 
@@ -118,7 +125,7 @@ public class GeoLocationService
         ObservableCollection<Entry> newEntries = new ObservableCollection<Entry>(meteoListViewModelContext.Entries);
 
         // Rimuovi la vecchia currentLocation (se esiste) e aggiungi la nuova
-        var previousCurrentLocation = newEntries.FirstOrDefault();
+        var previousCurrentLocation = newEntries.FirstOrDefault<Entry>(e => e.IsCurrentLocation);
         if (previousCurrentLocation != null)
         {
             newEntries.Remove(previousCurrentLocation);
