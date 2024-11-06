@@ -7,5 +7,9 @@
                 FontSize="55"
                 HorizontalOptions="Center" 
                 VerticalOptions="Start" />
+        <Label Text="{Binding Entry.CompleteAddress}"
+        FontSize="55"
+        HorizontalOptions="Center" 
+        VerticalOptions="Start" />
     </StackLayout>
 </ContentPage>

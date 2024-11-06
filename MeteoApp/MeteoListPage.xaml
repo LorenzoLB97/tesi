@@ -9,7 +9,6 @@
 
         <ScrollView>
             <StackLayout Margin="20">
-                <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" Color="Blue" />
 
                 <!-- CollectionView con bottone Delete per ogni elemento -->
                 <CollectionView x:Name="zCollectionView" ItemsSource="{Binding Entries}" SelectionMode="Single" SelectionChanged="OnListItemSelected">

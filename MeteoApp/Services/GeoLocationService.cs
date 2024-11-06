@@ -21,7 +21,6 @@ public class GeoLocationService
     {
         try
         {
-            (bindingContext as MeteoListViewModel).IsBusy = true; // Inizia il caricamento
             var permissions = await Permissions.CheckStatusAsync<Permissions.LocationWhenInUse>();
 
             GeolocationRequest locationRequest;
@@ -65,10 +64,6 @@ public class GeoLocationService
         catch (Exception ex)
         {
             Debug.WriteLine($"Errore nell'acquisizione della posizione: {ex.Message}");
-        }
-        finally
-        {
-            (bindingContext as MeteoListViewModel).IsBusy = false; // Fine del caricamento
         }
     }
 

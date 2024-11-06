@@ -8,7 +8,6 @@ namespace MeteoApp
      */
     public class MeteoListViewModel : BaseViewModel
     {
-        private bool _isBusy;
         private readonly MyDatabase _database;
 
         /**
@@ -28,16 +27,6 @@ namespace MeteoApp
                 {
                     Debug.WriteLine("VALORE DI CURRENTLOCATION CORRENTE: " + value.FirstOrDefault().CompleteAddress);
                 }
-            }
-        }
-
-        public bool IsBusy
-        {
-            get => _isBusy;
-            set
-            {
-                _isBusy = value;
-                OnPropertyChanged();
             }
         }
 
