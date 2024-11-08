@@ -1,15 +1,28 @@
-﻿namespace MeteoApp;
+﻿using MeteoApp.Services;
+
+namespace MeteoApp;
 
 [QueryProperty(nameof(Entry), "Entry")]
 public partial class MeteoItemPage : ContentPage
 {
     Entry entry;
+    WeatherInfo weather;
     public Entry Entry
     {
         get => entry;
         set
         {
             entry = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public WeatherInfo Weather
+    {
+        get => weather;
+        set
+        {
+            weather = value;
             OnPropertyChanged();
         }
     }
@@ -29,8 +42,12 @@ public partial class MeteoItemPage : ContentPage
      * Avviare processi, come recuperare dati da un'API o avviare animazioni.
      * Registrare eventi o gestire l'interfaccia utente che dipende dalla visibilità della pagina.
      */
-    protected override void OnAppearing()
+    protected async override void OnAppearing()
     {
         base.OnAppearing();
+
+        WeatherService weatherService = new WeatherService("5f295cc6c43db512df9fa76c042ba9d1");
+
+        await weatherService.GetCurrentWeatherAsync(entry);
     }
 }
