@@ -4,6 +4,8 @@ using System.Threading.Tasks;
 using System.Text.Json;
 using System.Diagnostics;
 using static System.Net.WebRequestMethods;
+using File = System.IO.File;
+using Microsoft.Extensions.Configuration;
 
 namespace MeteoApp.Services
 {
@@ -12,10 +14,14 @@ namespace MeteoApp.Services
         private readonly HttpClient _httpClient;
         private readonly string _apiKey;
 
-        public WeatherService(string apiKey)
+        public WeatherService(IConfiguration configuration)
         {
             _httpClient = new HttpClient();
-            _apiKey = apiKey;
+
+            // Ottieni l'API key dalla configurazione
+            _apiKey = configuration["WeatherApiKey"];
+
+            Console.WriteLine($"XXXXXXXXXXX API Key: {_apiKey}");
         }
 
         // Metodo per ottenere il meteo attuale per una determinata città
@@ -25,26 +31,30 @@ namespace MeteoApp.Services
             double lat = entry.Latitude;
             double lon = entry.Longitude;
 
-            Debug.WriteLine("HHHHHKKKKK: " + _apiKey);
-
-            string url = $"https://api.openweathermap.org/data/2.5/forecast?lat={lat}&lon={lon}&appid={_apiKey}";
+            string url = $"https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={_apiKey}";
 
             try
             {
-                Debug.WriteLine("XXXXXXXXXXXXXX Avviata richiesta http");
                 var response = await _httpClient.GetAsync(url);
                 response.EnsureSuccessStatusCode(); // Lancia un'eccezione se lo status code non è 2xx
 
                 var json = await response.Content.ReadAsStringAsync();
-                var weatherInfo = JsonSerializer.Deserialize<WeatherInfo>(json);
+                WeatherInfo weatherInfo = new WeatherInfo();
 
-                Debug.WriteLine($"YYYYYYYYYYYYY Weather Info: {weatherInfo.Wind}");
+                var options = new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                };
+
+                weatherInfo = JsonSerializer.Deserialize<WeatherInfo>(json, options);
+
+                Debug.WriteLine("AAAAA prova WI: \n" + weatherInfo);
 
                 return weatherInfo;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Errore nella richiesta del meteo: {ex.Message}");
+                Debug.WriteLine($"Errore nella richiesta del meteo: {ex.Message}");
                 return null;
             }
         }

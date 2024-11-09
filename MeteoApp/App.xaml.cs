@@ -1,4 +1,6 @@
-﻿using System.Collections.ObjectModel;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Maui.Controls;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 
 namespace MeteoApp;
@@ -14,6 +16,7 @@ public partial class App : Application
 	{
         SQLitePCL.Batteries_V2.Init(); // Inizializza SQLite
         InitializeComponent();
+
         Services = services;
 
         // Inietta le dipendenze tramite il provider di servizi

@@ -1,12 +1,16 @@
 ﻿using MeteoApp.Services;
+using System.Diagnostics;
 
 namespace MeteoApp;
 
 [QueryProperty(nameof(Entry), "Entry")]
 public partial class MeteoItemPage : ContentPage
 {
-    Entry entry;
-    WeatherInfo weather;
+    private Entry entry;
+    private WeatherInfo currentWeatherInfo;
+
+    private readonly WeatherService _weatherService;
+
     public Entry Entry
     {
         get => entry;
@@ -17,20 +21,22 @@ public partial class MeteoItemPage : ContentPage
         }
     }
 
-    public WeatherInfo Weather
+    public WeatherInfo WeatherInfo
     {
-        get => weather;
+        get => currentWeatherInfo;
         set
         {
-            weather = value;
+            currentWeatherInfo = value;
             OnPropertyChanged();
         }
     }
 
-    public MeteoItemPage()
+    public MeteoItemPage(WeatherService weatherService)
     {
         InitializeComponent();
         BindingContext = this;
+
+        _weatherService = weatherService;
     }
 
     /**
@@ -46,8 +52,20 @@ public partial class MeteoItemPage : ContentPage
     {
         base.OnAppearing();
 
-        WeatherService weatherService = new WeatherService("5f295cc6c43db512df9fa76c042ba9d1");
+        WeatherInfo = await _weatherService.GetCurrentWeatherAsync(entry);
 
-        await weatherService.GetCurrentWeatherAsync(entry);
+        if (currentWeatherInfo != null)
+        {
+            Debug.WriteLine("XXXXXXXXXX Info: \n" +
+            currentWeatherInfo.Base);
+
+            Debug.WriteLine("XXXXXXXXXX Info Temp: \n" +
+            "Temp: " + currentWeatherInfo.Main.Temp);
+        } else
+        {
+            Debug.WriteLine("ERRORE: NULL?");
+        }     
     }
+
+
 }
