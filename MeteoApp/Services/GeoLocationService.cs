@@ -11,14 +11,24 @@ namespace MeteoApp.Services;
 public class GeoLocationService
 {
     private readonly MyDatabase _database;
+    private Timer _timer;
+    private BaseViewModel _bindingContext;
+    private int _UpdateCurrentLocationTimer = 20; //variabile da modificare in base al periodo di aggiornamento desiderato
 
     public GeoLocationService(MyDatabase database)
     {
         _database = database;
+
+        // Imposta il timer per eseguire la funzione ogni tot minuti
+        _timer = new Timer(async (e) =>
+        {
+            await GetCurrentLocation();
+        }, null, TimeSpan.Zero, TimeSpan.FromSeconds(_UpdateCurrentLocationTimer));
     }
 
-    public async Task GetCurrentLocation(BaseViewModel bindingContext)
+    public async Task GetCurrentLocation()
     {
+        Debug.WriteLine("TIMERRR XXXXXXXXXXXXXXXXXXXXXXXXXXXXXxxxx");
         try
         {
             var permissions = await Permissions.CheckStatusAsync<Permissions.LocationWhenInUse>();
@@ -34,7 +44,7 @@ public class GeoLocationService
                 Entry currentLocation = await ReverseGeoCoding(location);
                 currentLocation.IsCurrentLocation = true;
 
-                AddToDBCurrentLocation(bindingContext, currentLocation);
+                AddToDBCurrentLocation(currentLocation);
             }
             else
             {
@@ -50,7 +60,7 @@ public class GeoLocationService
                     Entry currentLocation = await ReverseGeoCoding(location);
                     currentLocation.IsCurrentLocation = true;
 
-                    AddToDBCurrentLocation(bindingContext, currentLocation);
+                    AddToDBCurrentLocation(currentLocation);
                 }
                 else
                 {
@@ -108,13 +118,13 @@ public class GeoLocationService
      * ATTENZIONE! L'observable collection deve essere sostituita TOTALMENTE,
      * non basta fare add(entry) perché altrimenti non si attiva OnPropertyChange()
      */
-    private void AddToDBCurrentLocation(BaseViewModel bindingContext, Entry currentLocationEntry)
+    private void AddToDBCurrentLocation(Entry currentLocationEntry)
     {
         //Inserisce o aggiorna con la nuova currentLocation
         //Ok
         _database.UpsertCurrentLocation(currentLocationEntry);
 
-        MeteoListViewModel meteoListViewModelContext = bindingContext as MeteoListViewModel;
+        MeteoListViewModel meteoListViewModelContext = _bindingContext as MeteoListViewModel;
 
         // Crea una nuova collezione e sostituisci la vecchia
         ObservableCollection<Entry> newEntries = new ObservableCollection<Entry>(meteoListViewModelContext.Entries);
@@ -129,5 +139,15 @@ public class GeoLocationService
 
         // Sostituisci la collezione e chiama OnPropertyChanged
         meteoListViewModelContext.Entries = newEntries;
+    }
+
+    public BaseViewModel GetBindingContext()
+    {
+        return _bindingContext;
+    }
+
+    public void SetBindingContext(BaseViewModel bindingContext)
+    {
+        _bindingContext = bindingContext;
     }
 }

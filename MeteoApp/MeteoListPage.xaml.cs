@@ -21,7 +21,6 @@ public partial class MeteoListPage : Shell
 		InitializeComponent();
 
         RegisterRoutes();
-        _geoLocationService = geoLocationService;
         _database = myDatabase;
 
         /*
@@ -30,6 +29,9 @@ public partial class MeteoListPage : Shell
          */
         _viewModel = new MeteoListViewModel(myDatabase);
         BindingContext = _viewModel; // Imposta il ViewModel come BindingContext
+
+        geoLocationService.SetBindingContext(_viewModel);
+        _geoLocationService = geoLocationService;
 
         // Aggiungi l'evento Navigated di Shell
         this.Navigated += OnNavigated;
@@ -91,12 +93,12 @@ public partial class MeteoListPage : Shell
 
     public async void GetCurrentLocation()
     {
-        await _geoLocationService.GetCurrentLocation(BindingContext as BaseViewModel);
+        await _geoLocationService.GetCurrentLocation();
     }
 
     private async void ReloadEntries()
     {
-        await _geoLocationService.GetCurrentLocation(_viewModel);
+        await _geoLocationService.GetCurrentLocation();
         _viewModel.RefreshEntries();
     }
     /**
