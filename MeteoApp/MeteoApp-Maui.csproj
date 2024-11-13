@@ -33,6 +33,10 @@
 		<AssemblyName>MeteoApp</AssemblyName>
 	</PropertyGroup>
 
+	<PropertyGroup>
+		<AndroidPackageFormat>apk</AndroidPackageFormat>
+	</PropertyGroup>
+
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-ios|AnyCPU'">
 	  <CreatePackage>false</CreatePackage>
 	</PropertyGroup>

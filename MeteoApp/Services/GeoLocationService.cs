@@ -11,9 +11,9 @@ namespace MeteoApp.Services;
 public class GeoLocationService
 {
     private readonly MyDatabase _database;
-    private Timer _timer;
+    private readonly Timer _timer;
     private BaseViewModel _bindingContext;
-    private int _UpdateCurrentLocationTimer = 20; //variabile da modificare in base al periodo di aggiornamento desiderato
+    private readonly int _updateCurrentLocationTimer = 20; //variabile da modificare in base al periodo di aggiornamento desiderato
 
     public GeoLocationService(MyDatabase database)
     {
@@ -23,12 +23,12 @@ public class GeoLocationService
         _timer = new Timer(async (e) =>
         {
             await GetCurrentLocation();
-        }, null, TimeSpan.Zero, TimeSpan.FromSeconds(_UpdateCurrentLocationTimer));
+        }, null, TimeSpan.Zero, TimeSpan.FromSeconds(_updateCurrentLocationTimer));
     }
 
     public async Task GetCurrentLocation()
     {
-        Debug.WriteLine("TIMERRR XXXXXXXXXXXXXXXXXXXXXXXXXXXXXxxxx");
+        Debug.WriteLine("TIMERRR ACTIVATION! XXXXXXXXXXXXXXXXXXXXXXXXXXXXXxxxx");
         try
         {
             var permissions = await Permissions.CheckStatusAsync<Permissions.LocationWhenInUse>();

@@ -10,35 +10,38 @@
         <ScrollView>
             <StackLayout Margin="20">
 
-                <!-- CollectionView con bottone Delete per ogni elemento -->
+                <!-- CollectionView con Swipe per delete -->
                 <CollectionView x:Name="zCollectionView" ItemsSource="{Binding Entries}" SelectionMode="Single" SelectionChanged="OnListItemSelected">
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
-                            <Grid Padding="10" Margin="5" BackgroundColor="LightGray">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="*" />
-                                </Grid.RowDefinitions>
+                            <!-- SwipeView che consente lo swipe verso destra -->
+                            <SwipeView>
+                                <SwipeView.RightItems>
+                                    <SwipeItems>
+                                        <SwipeItem
+                                            Text="Delete"
+                                            BackgroundColor="Red"
+                                            Invoked="OnDeleteItemBySwipe"
+                                            CommandParameter="{Binding .}" />
+                                    </SwipeItems>
+                                </SwipeView.RightItems>
 
-                                <Label Grid.Row="0"
-                                       Text="{Binding CompleteAddress}"
-                                       VerticalTextAlignment="Center"
-                                       HorizontalOptions="CenterAndExpand"
-                                       HorizontalTextAlignment="Center"
-                                       LineBreakMode="WordWrap"
-                                       FontSize="Medium" />
+                                <!-- Contenuto principale dello SwipeView -->
+                                <Grid Padding="10" Margin="5" BackgroundColor="LightGray">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="*" />
+                                    </Grid.RowDefinitions>
 
-                                <!-- Bottone Delete in basso a sinistra, più piccolo -->
-                                <Button Text="Delete"
-                                        Grid.Row="1"
-                                        HorizontalOptions="End"
-                                        VerticalOptions="End"
-                                        WidthRequest="80"
-                                        HeightRequest="50"
-                                        FontSize="Small"
-                                        Clicked="OnDeleteButtonClicked"
-                                        CommandParameter="{Binding .}" />
-                            </Grid>
+                                    <Label Grid.Row="0"
+                                           Text="{Binding CompleteAddress}"
+                                           VerticalTextAlignment="Center"
+                                           HorizontalOptions="CenterAndExpand"
+                                           HorizontalTextAlignment="Center"
+                                           LineBreakMode="WordWrap"
+                                           FontSize="Medium" />
+                                </Grid>
+                            </SwipeView>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
                 </CollectionView>

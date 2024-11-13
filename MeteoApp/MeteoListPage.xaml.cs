@@ -71,6 +71,9 @@ public partial class MeteoListPage : Shell
 
             Shell.Current.GoToAsync($"entrydetails", navigationParameter);
         }
+
+        // Deseleziona l'elemento per consentire una nuova selezione in futuro
+        ((CollectionView)sender).SelectedItem = null;
     }
     /**
      * A questo metodo va aggiunta la mappa di google maps
@@ -105,11 +108,10 @@ public partial class MeteoListPage : Shell
     * Bug da fixare: se viene eliminate la CurrentLocation
     * Bisogna ricaricarla
     */
-    private void OnDeleteButtonClicked(object sender, EventArgs e)
+    private void OnDeleteItemBySwipe(object sender, EventArgs e)
     {
-        // Ottiene l'entry associata al pulsante
-        var button = sender as Button;
-        var entryToDelete = button?.CommandParameter as Entry;
+        var swipeItem = sender as SwipeItem;
+        var entryToDelete = swipeItem?.CommandParameter as Entry;
 
         if (entryToDelete != null && !entryToDelete.IsCurrentLocation)
         {

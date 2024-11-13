@@ -66,6 +66,4 @@ public partial class MeteoItemPage : ContentPage
             Debug.WriteLine("ERRORE: NULL?");
         }     
     }
-
-
 }
