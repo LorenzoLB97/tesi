@@ -13,7 +13,7 @@ public class GeoLocationService
     private readonly MyDatabase _database;
     private readonly Timer _timer;
     private BaseViewModel _bindingContext;
-    private readonly int _updateCurrentLocationTimer = 20; //variabile da modificare in base al periodo di aggiornamento desiderato
+    private readonly int _updateCurrentLocationTimer = 15; //variabile da modificare in base al periodo di aggiornamento desiderato
 
     public GeoLocationService(MyDatabase database)
     {
@@ -23,7 +23,7 @@ public class GeoLocationService
         _timer = new Timer(async (e) =>
         {
             await GetCurrentLocation();
-        }, null, TimeSpan.Zero, TimeSpan.FromSeconds(_updateCurrentLocationTimer));
+        }, null, TimeSpan.Zero, TimeSpan.FromMinutes(_updateCurrentLocationTimer));
     }
 
     public async Task GetCurrentLocation()

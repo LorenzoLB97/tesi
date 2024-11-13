@@ -81,17 +81,47 @@ public class Coord
 
 public class Main
 {
+    private float _temp;
+    private float _feelsLike;
+    private float _tempMin;
+    private float _tempMax;
+
     [JsonPropertyName("temp")]
-    public float Temp { get; set; }
+    public float Temp
+    {
+        get => _temp;
+        set => _temp = value;
+    }
+
+    // Proprietà per avere la temperatura in Celsius
+    public float TempCelsius => _temp - 273.15f;
 
     [JsonPropertyName("feels_like")]
-    public float FeelsLike { get; set; }
+    public float FeelsLike
+    {
+        get => _feelsLike;
+        set => _feelsLike = value;
+    }
+
+    public float FeelsLikeCelsius => _feelsLike - 273.15f;
 
     [JsonPropertyName("temp_min")]
-    public float TempMin { get; set; }
+    public float TempMin
+    {
+        get => _tempMin;
+        set => _tempMin = value;
+    }
+
+    public float TempMinCelsius => _tempMin - 273.15f;
 
     [JsonPropertyName("temp_max")]
-    public float TempMax { get; set; }
+    public float TempMax
+    {
+        get => _tempMax;
+        set => _tempMax = value;
+    }
+
+    public float TempMaxCelsius => _tempMax - 273.15f;
 
     [JsonPropertyName("pressure")]
     public int Pressure { get; set; }
@@ -105,12 +135,16 @@ public class Main
     [JsonPropertyName("grnd_level")]
     public int GrndLevel { get; set; }
 
+    // ToString aggiornato per mostrare le temperature in gradi Celsius
     public override string ToString()
     {
-        return $"Main [Temperature: {Temp}, Feels Like: {FeelsLike}, Min Temp: {TempMin}, Max Temp: {TempMax}, " +
+        return $"Main [Temperature (Celsius): {TempCelsius}, Feels Like (Celsius): {FeelsLikeCelsius}, " +
+               $"Min Temp (Celsius): {TempMinCelsius}, Max Temp (Celsius): {TempMaxCelsius}, " +
                $"Pressure: {Pressure}, Humidity: {Humidity}, Sea Level: {SeaLevel}, Ground Level: {GrndLevel}]";
     }
 }
+
+
 
 
 public class Weather

@@ -1,81 +1,74 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="MeteoApp.MeteoItemPage">
+             x:Class="MeteoApp.MeteoItemPage"
+             BackgroundColor="#f0f0f0">
     <ScrollView>
-        <StackLayout x:Name="MainLayout" Spacing="20" Padding="20">
+        <StackLayout x:Name="MainLayout" Spacing="25" Padding="20" BackgroundColor="White">
 
             <!-- Titolo -->
             <Label Text="{Binding Entry.CompleteAddress}"
-                   FontSize="25"
+                   FontSize="28"
+                   TextColor="#2c3e50"
+                   FontAttributes="Bold"
                    HorizontalOptions="Center" 
                    VerticalOptions="Start" />
 
-            <!-- Sezione Coordinate -->
-            <Label Text="Coordinate:" FontAttributes="Bold" FontSize="18" />
-            <Label Text="{Binding WeatherInfo.Coord.Lat, StringFormat='Latitudine: {0}'}" />
-            <Label Text="{Binding WeatherInfo.Coord.Lon, StringFormat='Longitudine: {0}'}" />
+            <!-- Condizioni Meteo -->
+            <Label Text="{Binding WeatherInfo.Weather[0].MainDescription}"
+                   FontSize="22"
+                   TextColor="#34495e"
+                   FontAttributes="Bold"
+                   HorizontalOptions="Center" />
 
-            <!-- Sezione Meteo -->
-            <Label Text="Condizioni Meteo:" FontAttributes="Bold" FontSize="18" />
-            <CollectionView ItemsSource="{Binding WeatherInfo.Weather}">
-                <CollectionView.ItemTemplate>
-                    <DataTemplate>
-                        <StackLayout>
-                            <Label Text="{Binding MainDescription, StringFormat='Condizione: {0}'}" />
-                            <Label Text="{Binding Description, StringFormat='Descrizione: {0}'}" />
-                            <Label Text="{Binding Icon, StringFormat='Icona: {0}'}" />
-                        </StackLayout>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
+            <Label Text="{Binding WeatherInfo.Weather[0].Description}"
+                   FontSize="18"
+                   TextColor="#7f8c8d"
+                   HorizontalOptions="Center" />
 
-            <!-- Sezione Dati Principali -->
-            <Label Text="Dati Principali:" FontAttributes="Bold" FontSize="18" />
-            <Label Text="{Binding WeatherInfo.Main.Temp, StringFormat='Temperatura: {0}'}" />
-            <Label Text="{Binding WeatherInfo.Main.FeelsLike, StringFormat='Percepita: {0}'}" />
-            <Label Text="{Binding WeatherInfo.Main.TempMin, StringFormat='Temperatura Min: {0}'}" />
-            <Label Text="{Binding WeatherInfo.Main.TempMax, StringFormat='Temperatura Max: {0}'}" />
-            <Label Text="{Binding WeatherInfo.Main.Pressure, StringFormat='Pressione: {0}'}" />
-            <Label Text="{Binding WeatherInfo.Main.Humidity, StringFormat='Umidità: {0}'}" />
-            <Label Text="{Binding WeatherInfo.Main.SeaLevel, StringFormat='Livello del Mare: {0}'}" />
-            <Label Text="{Binding WeatherInfo.Main.GrndLevel, StringFormat='Livello del Suolo: {0}'}" />
+            <!-- Separator -->
+            <BoxView HeightRequest="2" BackgroundColor="#ecf0f1" HorizontalOptions="Fill" />
 
-            <!-- Sezione Visibilità -->
-            <Label Text="Visibilità:" FontAttributes="Bold" FontSize="18" />
-            <Label Text="{Binding WeatherInfo.Visibility, StringFormat='Visibilità: {0}'}" />
+            <!-- Sezione Dati Meteo -->
+            <Grid Padding="0" ColumnSpacing="15" RowSpacing="20">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
 
-            <!-- Sezione Vento -->
-            <Label Text="Vento:" FontAttributes="Bold" FontSize="18" />
-            <Label Text="{Binding WeatherInfo.Wind.Speed, StringFormat='Velocità: {0}'}" />
-            <Label Text="{Binding WeatherInfo.Wind.Deg, StringFormat='Direzione: {0}'}" />
-            <Label Text="{Binding WeatherInfo.Wind.Gust, StringFormat='Raffica: {0}'}" />
+                <!-- Temperatura -->
+                <StackLayout Grid.Row="0" Grid.Column="0" HorizontalOptions="Center">
+                    <Label Text="Temperatura" FontSize="16" TextColor="#2c3e50" FontAttributes="Bold" />
+                    <Label Text="{Binding WeatherInfo.Main.TempCelsius, StringFormat='{0:F2} °C'}" FontSize="20" TextColor="#3498db" />
+                </StackLayout>
 
-            <!-- Sezione Pioggia -->
-            <Label Text="Pioggia:" FontAttributes="Bold" FontSize="18" />
-            <Label Text="{Binding WeatherInfo.Rain.OneHour, StringFormat='Ultima Ora: {0}'}" />
+                <!-- Velocità Vento -->
+                <StackLayout Grid.Row="0" Grid.Column="1" HorizontalOptions="Center">
+                    <Label Text="Vento" FontSize="16" TextColor="#2c3e50" FontAttributes="Bold" />
+                    <Label Text="{Binding WeatherInfo.Wind.Speed, StringFormat='{0} m/s'}" FontSize="20" TextColor="#3498db" />
+                </StackLayout>
 
-            <!-- Sezione Nuvole -->
-            <Label Text="Nuvole:" FontAttributes="Bold" FontSize="18" />
-            <Label Text="{Binding WeatherInfo.Clouds.All, StringFormat='Copertura Nuvolosa: {0}'}" />
+                <!-- Pioggia Ultima Ora -->
+                <StackLayout Grid.Row="1" Grid.Column="0" HorizontalOptions="Center">
+                    <Label Text="Pioggia (Ultima Ora)" FontSize="16" TextColor="#2c3e50" FontAttributes="Bold" />
+                    <Label Text="{Binding WeatherInfo.Rain.OneHour, StringFormat='{0} mm'}" FontSize="20" TextColor="#3498db" />
+                </StackLayout>
 
-            <!-- Sezione Sistema -->
-            <Label Text="Informazioni Sistema:" FontAttributes="Bold" FontSize="18" />
-            <Label Text="{Binding WeatherInfo.Sys.Type, StringFormat='Tipo: {0}'}" />
-            <Label Text="{Binding WeatherInfo.Sys.Id, StringFormat='ID: {0}'}" />
-            <Label Text="{Binding WeatherInfo.Sys.Country, StringFormat='Paese: {0}'}" />
-            <Label Text="{Binding WeatherInfo.Sys.Sunrise, StringFormat='Alba (Unix): {0}'}" />
-            <Label Text="{Binding WeatherInfo.Sys.Sunset, StringFormat='Tramonto (Unix): {0}'}" />
-
-            <!-- Sezione Generale -->
-            <Label Text="Altre Informazioni:" FontAttributes="Bold" FontSize="18" />
-            <Label Text="{Binding WeatherInfo.Base, StringFormat='Base: {0}'}" />
-            <Label Text="{Binding WeatherInfo.Dt, StringFormat='Data/Ora (Unix): {0}'}" />
-            <Label Text="{Binding WeatherInfo.Timezone, StringFormat='Fuso Orario: {0}'}" />
-            <Label Text="{Binding WeatherInfo.Id, StringFormat='ID Città: {0}'}" />
-            <Label Text="{Binding WeatherInfo.Name, StringFormat='Nome Città: {0}'}" />
-            <Label Text="{Binding WeatherInfo.Cod, StringFormat='Codice: {0}'}" />
-
+                <!-- Nuvole -->
+                <StackLayout Grid.Row="1" Grid.Column="1" HorizontalOptions="Center">
+                    <Label Text="Nuvole" FontSize="16" TextColor="#2c3e50" FontAttributes="Bold" />
+                    <Label Text="{Binding WeatherInfo.Clouds.All, StringFormat='{0}%'}" FontSize="20" TextColor="#3498db" />
+                </StackLayout>            
+            </Grid>
+            
+            <Image Source="open_weather_logo.png"
+               HorizontalOptions="Center"
+               VerticalOptions="End" 
+               Aspect="AspectFit"/>
         </StackLayout>
     </ScrollView>
 </ContentPage>
