@@ -2,6 +2,7 @@
 using Microsoft.Maui;
 using Microsoft.Maui.Controls;
 using Microsoft.Maui.Controls.Maps;
+using Microsoft.Maui.Maps;
 using Map = Microsoft.Maui.Controls.Maps.Map;
 
 namespace MeteoApp;
@@ -17,7 +18,9 @@ public partial class MapPage : ContentPage
         _geoLocationService = geoLocationService;
         _database = database;
 
-        Map map = new Map()
+        // Creazione della mappa e impostazione della posizione iniziale su (42, 42)
+        Entry currentLocation = _database.GetCurrentLocationEntry();
+        Map map = new Map(MapSpan.FromCenterAndRadius(new Location(currentLocation.Latitude, currentLocation.Longitude), Distance.FromMiles(5)))
         {
             IsShowingUser = true
         };
