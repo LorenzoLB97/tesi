@@ -1,9 +1,7 @@
 ﻿using MeteoApp.Services;
-using Microsoft.Maui;
 using Microsoft.Maui.Controls;
 using Microsoft.Maui.Controls.Maps;
 using Microsoft.Maui.Maps;
-using Map = Microsoft.Maui.Controls.Maps.Map;
 
 namespace MeteoApp;
 
@@ -11,8 +9,6 @@ public partial class MapPage : ContentPage
 {
     private readonly GeoLocationService _geoLocationService;
     private readonly MyDatabase _database;
-    private Map _map; // Rendi la mappa accessibile da altri metodi
-    private SearchBar _searchBar; // Barra di ricerca
 
     public MapPage(GeoLocationService geoLocationService, MyDatabase database)
     {
@@ -21,35 +17,14 @@ public partial class MapPage : ContentPage
         _geoLocationService = geoLocationService;
         _database = database;
 
-        // Creazione della barra di ricerca
-        _searchBar = new SearchBar
-        {
-            Placeholder = "Cerca una località"
-        };
-        _searchBar.SearchButtonPressed += OnSearchButtonPressed;
-
-        // Creazione della mappa e impostazione della posizione iniziale sulla currentLocation
+        // Imposta la posizione iniziale della mappa su currentLocation
         Entry currentLocation = _database.GetCurrentLocationEntry();
-        _map = new Map(MapSpan.FromCenterAndRadius(new Location(currentLocation.Latitude, currentLocation.Longitude), Distance.FromMiles(5)))
-        {
-            IsShowingUser = true
-        };
-        _map.MapClicked += OnMapClicked;
-
-        // Aggiungi la barra di ricerca e la mappa allo StackLayout
-        Content = new StackLayout
-        {
-            Children =
-            {
-                _searchBar,
-                _map
-            }
-        };
+        map.MoveToRegion(MapSpan.FromCenterAndRadius(new Location(currentLocation.Latitude, currentLocation.Longitude), Distance.FromMiles(5)));
     }
 
     async void OnSearchButtonPressed(object sender, EventArgs e)
     {
-        string address = _searchBar.Text;
+        string address = searchBar.Text;
 
         if (!string.IsNullOrEmpty(address))
         {
@@ -60,7 +35,7 @@ public partial class MapPage : ContentPage
             if (location != null)
             {
                 // Sposta la mappa sulla posizione trovata
-                _map.MoveToRegion(MapSpan.FromCenterAndRadius(new Location(location.Latitude, location.Longitude), Distance.FromMiles(1)));
+                map.MoveToRegion(MapSpan.FromCenterAndRadius(new Location(location.Latitude, location.Longitude), Distance.FromMiles(1)));
             }
             else
             {
