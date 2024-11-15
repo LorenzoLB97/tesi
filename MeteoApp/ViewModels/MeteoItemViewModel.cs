@@ -39,7 +39,7 @@ namespace MeteoApp.ViewModels
 
         public async Task LoadWeatherInfoAsync()
         {
-            if (Entry != null)
+            if (Entry != null) //check
             {
                 WeatherInfo = await _weatherService.GetCurrentWeatherAsync(Entry);
             }
