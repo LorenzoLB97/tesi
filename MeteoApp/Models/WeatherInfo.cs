@@ -161,6 +161,9 @@ public class Weather
     [JsonPropertyName("icon")]
     public string Icon { get; set; }
 
+    // Proprieta' che restituisce l'URL dell'icona
+    public string IconUrl => $"https://openweathermap.org/img/wn/{Icon}@2x.png";
+
     public override string ToString()
     {
         return $"Weather [Id: {Id}, Main: {MainDescription}, Description: {Description}, Icon: {Icon}]";
