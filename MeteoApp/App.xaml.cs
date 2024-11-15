@@ -12,27 +12,17 @@ public partial class App : Application
 
     private readonly MyDatabase _database; // Variabile privata per memorizzare l'istanza
     private readonly MeteoListPage _mainPage;
-    private readonly GeoLocationService _geoLocationService;
-
-    //private Timer _timer;
 
     public App(IServiceProvider services)
 	{
         SQLitePCL.Batteries_V2.Init(); // Inizializza SQLite
         InitializeComponent();
 
-        // Imposta il timer per eseguire la funzione ogni 5 minuti
-        /*_timer = new Timer(async (e) =>
-        {
-            await ExecuteBackgroundLocationTask();
-        }, null, TimeSpan.Zero, TimeSpan.FromMinutes(5));*/
-
         Services = services;
 
         // Inietta le dipendenze tramite il provider di servizi
         _database = services.GetRequiredService<MyDatabase>();
         _mainPage = services.GetRequiredService<MeteoListPage>();
-        //_geoLocationService = services.GetRequiredService<GeoLocationService>();
 
         // Imposta la pagina principale come _mainPage
         MainPage = _mainPage;

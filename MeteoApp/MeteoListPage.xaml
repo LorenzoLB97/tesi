@@ -8,39 +8,63 @@
         </ContentPage.ToolbarItems>
 
         <ScrollView>
-            <StackLayout Margin="20">
+            <StackLayout Margin="20" Spacing="10">
+
+                <Label Text="Lista Località"
+                       FontSize="24"
+                       FontAttributes="Bold"
+                       TextColor="#2c3e50"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Start"
+                       Margin="0,0,0,10" />
 
                 <!-- CollectionView con Swipe per delete -->
                 <CollectionView x:Name="zCollectionView" ItemsSource="{Binding Entries}" SelectionMode="Single" SelectionChanged="OnListItemSelected">
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
-                            <!-- SwipeView che consente lo swipe verso destra -->
+                            <!-- SwipeView con stile migliorato -->
                             <SwipeView>
                                 <SwipeView.RightItems>
                                     <SwipeItems>
                                         <SwipeItem
                                             Text="Delete"
-                                            BackgroundColor="Red"
+                                            BackgroundColor="#e74c3c"
+                                            
                                             Invoked="OnDeleteItemBySwipe"
                                             CommandParameter="{Binding .}" />
                                     </SwipeItems>
                                 </SwipeView.RightItems>
 
                                 <!-- Contenuto principale dello SwipeView -->
-                                <Grid Padding="10" Margin="5" BackgroundColor="LightGray">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto" />
-                                        <RowDefinition Height="*" />
-                                    </Grid.RowDefinitions>
+                                <Frame CornerRadius="15"
+                                       Padding="15"
+                                       BackgroundColor="White"
+                                       HasShadow="True"
+                                       Margin="0,5">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="*" />
+                                        </Grid.RowDefinitions>
 
-                                    <Label Grid.Row="0"
-                                           Text="{Binding CompleteAddress}"
-                                           VerticalTextAlignment="Center"
-                                           HorizontalOptions="CenterAndExpand"
-                                           HorizontalTextAlignment="Center"
-                                           LineBreakMode="WordWrap"
-                                           FontSize="Medium" />
-                                </Grid>
+                                        <!-- Titolo -->
+                                        <Label Grid.Row="0"
+                                               Text="{Binding CompleteAddress}"
+                                               FontSize="18"
+                                               FontAttributes="Bold"
+                                               TextColor="#34495e"
+                                               HorizontalOptions="Start"
+                                               VerticalTextAlignment="Center"
+                                               Margin="0,0,0,5" />
+
+                                        <!-- Dettagli aggiuntivi -->
+                                        <Label Grid.Row="1"
+                                               Text="Swipe per eliminare"
+                                               FontSize="14"
+                                               TextColor="#7f8c8d"
+                                               HorizontalOptions="Start" />
+                                    </Grid>
+                                </Frame>
                             </SwipeView>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
