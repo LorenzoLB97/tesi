@@ -1,69 +1,31 @@
 ﻿using MeteoApp.Services;
-using System.Diagnostics;
+using MeteoApp.ViewModels;
 
 namespace MeteoApp;
 
 [QueryProperty(nameof(Entry), "Entry")]
 public partial class MeteoItemPage : ContentPage
 {
-    private Entry entry;
-    private WeatherInfo currentWeatherInfo;
-
-    private readonly WeatherService _weatherService;
+    private readonly MeteoItemViewModel _viewModel;
 
     public Entry Entry
     {
-        get => entry;
-        set
-        {
-            entry = value;
-            OnPropertyChanged();
-        }
-    }
-
-    public WeatherInfo WeatherInfo
-    {
-        get => currentWeatherInfo;
-        set
-        {
-            currentWeatherInfo = value;
-            OnPropertyChanged();
-        }
+        get => _viewModel.Entry;
+        set => _viewModel.Entry = value;
     }
 
     public MeteoItemPage(WeatherService weatherService)
     {
         InitializeComponent();
-        BindingContext = this;
 
-        _weatherService = weatherService;
+        _viewModel = new MeteoItemViewModel(weatherService);
+        BindingContext = _viewModel;
     }
 
-    /**
-     * Metodo di ContentPage
-     * viene eseguito ogni volta che una pagina in un'applicazione 
-     * .NET MAUI diventa visibile all'utente
-     * Questo è utile in molti scenari, come:
-     * Aggiornare i dati della pagina prima che venga mostrata.
-     * Avviare processi, come recuperare dati da un'API o avviare animazioni.
-     * Registrare eventi o gestire l'interfaccia utente che dipende dalla visibilità della pagina.
-     */
     protected async override void OnAppearing()
     {
         base.OnAppearing();
 
-        WeatherInfo = await _weatherService.GetCurrentWeatherAsync(entry);
-
-        if (currentWeatherInfo != null)
-        {
-            Debug.WriteLine("XXXXXXXXXX Info: \n" +
-            currentWeatherInfo.Base);
-
-            Debug.WriteLine("XXXXXXXXXX Info Temp: \n" +
-            "Temp: " + currentWeatherInfo.Main.Temp);
-        } else
-        {
-            Debug.WriteLine("ERRORE: NULL?");
-        }     
+        await _viewModel.LoadWeatherInfoAsync();
     }
 }
