@@ -54,6 +54,9 @@
 		<!-- Raw Assets (also remove the "Resources\Raw" prefix) -->
 		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
 	</ItemGroup>
+	<ItemGroup>
+	  <AndroidResource Remove="Platforms\Android\Resources\values\strings.xml" />
+	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.3.2" />
@@ -114,6 +117,26 @@
 	</ItemGroup>
 	<ItemGroup>
 	  <PackageReference Update="Microsoft.Maui.Controls.Compatibility" Version="8.0.92" />
+	</ItemGroup>	
+	<ProjectExtensions><VisualStudio><UserProperties XamarinHotReloadGenericExceptionInfoBarMeteoAppMauiHideInfoBar="True" /></VisualStudio></ProjectExtensions>
+
+	<!-- firebase -->
+	
+	<ItemGroup>
+		<None Remove="google-services.json" />
+		<None Remove="Platforms\Android\Resources\values\strings.xml" />
 	</ItemGroup>
-	<ProjectExtensions><VisualStudio><UserProperties XamarinHotReloadGenericExceptionInfoBarMeteoAppMauiHideInfoBar="True" /></VisualStudio></ProjectExtensions>	
+	<ItemGroup Condition="'$(TargetFramework)' == 'net8.0-android'">
+		<PackageReference Include="Plugin.Firebase" Version="2.0.12" />
+	</ItemGroup>
+	<ItemGroup Condition="'$(TargetFramework)' == 'net8.0-android'">
+		<PackageReference Include="Xamarin.AndroidX.Preference">
+			<Version>1.2.1.3</Version>
+		</PackageReference>
+	</ItemGroup>
+	
+	<!-- firebase -->
+
 </Project>
+
+
