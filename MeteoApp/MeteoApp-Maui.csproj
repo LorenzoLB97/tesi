@@ -124,6 +124,10 @@
 		<PackageReference Include="Plugin.Firebase.CloudMessaging" Version="3.1.1" />
 	</ItemGroup>
 	
+	<!-- sul mio pc c'erano problemi di prestazione che bloccavano la compilazione quando 
+	veniva aggiunto il plugin firebase, con queste opzioni si riesce a portare a termine
+	la compilazione -->
+	
 	<PropertyGroup>
   <AndroidEnableMultiDex>true</AndroidEnableMultiDex>
   <AndroidEnableGoogleServices>true</AndroidEnableGoogleServices>
@@ -133,7 +137,6 @@
     <MSBuildEmitSolution>1</MSBuildEmitSolution>
     <DisableParallelBuild>true</DisableParallelBuild>
 </PropertyGroup>
-
 
 	<ProjectExtensions><VisualStudio><UserProperties XamarinHotReloadGenericExceptionInfoBarMeteoAppMauiHideInfoBar="True" /></VisualStudio></ProjectExtensions>	
 </Project>
