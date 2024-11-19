@@ -74,13 +74,13 @@
 	  <None Remove="Resources\ApiKey\appsettings.json" />
 	  <None Remove="Resources\Images\open_weather_logo.png" />
 	  <None Remove="sqlite-net-pcl" />
-	  <None Remove="Xam.Plugin.Geolocator" />
+	 <!-- <None Remove="Xam.Plugin.Geolocator" /> -->
 	  <None Remove="Resources\.DS_Store" />
-	  <None Remove="Xam.Plugins.Notifier" />
-	  <None Remove="Acr.UserDialogs" />
+		<!-- <None Remove="Xam.Plugins.Notifier" /> -->
+	  <!-- <None Remove="Acr.UserDialogs" /> -->
 	  <None Remove="SQLitePCLRaw.bundle_green" />
 	  <None Remove="Newtonsoft.Json" />
-	  <None Remove="Plugin.LocalNotification" />
+	  <!-- <None Remove="Plugin.LocalNotification" /> -->
 	</ItemGroup>
 	<ItemGroup>
 	  <BundleResource Include="Resources\.DS_Store" />
@@ -115,5 +115,25 @@
 	<ItemGroup>
 	  <PackageReference Update="Microsoft.Maui.Controls.Compatibility" Version="8.0.92" />
 	</ItemGroup>
+
+	<ItemGroup>
+		<GoogleServicesJson Include="Platforms/Android/google-services.json" />
+	</ItemGroup>
+	
+	<ItemGroup Condition="'$(TargetFramework)' == 'net8.0-android'">
+		<PackageReference Include="Plugin.Firebase.CloudMessaging" Version="3.1.1" />
+	</ItemGroup>
+	
+	<PropertyGroup>
+  <AndroidEnableMultiDex>true</AndroidEnableMultiDex>
+  <AndroidEnableGoogleServices>true</AndroidEnableGoogleServices>
+</PropertyGroup>
+	
+	<PropertyGroup>
+    <MSBuildEmitSolution>1</MSBuildEmitSolution>
+    <DisableParallelBuild>true</DisableParallelBuild>
+</PropertyGroup>
+
+
 	<ProjectExtensions><VisualStudio><UserProperties XamarinHotReloadGenericExceptionInfoBarMeteoAppMauiHideInfoBar="True" /></VisualStudio></ProjectExtensions>	
 </Project>
