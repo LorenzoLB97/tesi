@@ -38,6 +38,8 @@ public partial class App : Application
 
         // Chiama GetCurrentLocation nella pagina principale
         _mainPage.GetCurrentLocation();
+
+        GetToken();
     }
 
     private void LoadDBEntries()
@@ -50,5 +52,18 @@ public partial class App : Application
         {
             (reference.BindingContext as MeteoListViewModel).Entries = loadedEntries;
         }
+    }
+
+    private async void GetToken()
+    {
+#if ANDROID
+        System.Diagnostics.Debug.WriteLine("QQQQQQQQQQQQQQQQQQQ");
+
+        await Plugin.Firebase.CloudMessaging.CrossFirebaseCloudMessaging.Current.CheckIfValidAsync();
+        var token = await Plugin.Firebase.CloudMessaging.CrossFirebaseCloudMessaging.Current.GetTokenAsync();
+        System.Diagnostics.Debug.WriteLine("TTTTTTTTTTT " + token);
+
+        System.Diagnostics.Debug.WriteLine("QQQQQQQQQQQQQQQQQQQ");
+#endif
     }
 }
