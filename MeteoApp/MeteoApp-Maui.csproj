@@ -1,10 +1,7 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
 	<PropertyGroup>
-		<TargetFrameworks>net8.0-android;net8.0-ios;net8.0-maccatalyst</TargetFrameworks>
-		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net8.0-windows10.0.19041.0</TargetFrameworks>
-		<!-- Uncomment to also build the tizen app. You will need to install tizen by following this: https://github.com/Samsung/Tizen.NET -->
-		<!-- <TargetFrameworks>$(TargetFrameworks);net7.0-tizen</TargetFrameworks> -->
+		<TargetFrameworks>net8.0-android;net8.0-ios</TargetFrameworks>
 		<OutputType>Exe</OutputType>
 		<RootNamespace>MeteoApp</RootNamespace>
 		<UseMaui>true</UseMaui>
@@ -25,11 +22,7 @@
 		<ApplicationVersion>1</ApplicationVersion>
 
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">11.0</SupportedOSPlatformVersion>
-		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">13.1</SupportedOSPlatformVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">21.0</SupportedOSPlatformVersion>
-		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</SupportedOSPlatformVersion>
-		<TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
-		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'tizen'">6.5</SupportedOSPlatformVersion>
 		<AssemblyName>MeteoApp</AssemblyName>
 	</PropertyGroup>
 
@@ -37,9 +30,6 @@
 		<AndroidPackageFormat>apk</AndroidPackageFormat>
 	</PropertyGroup>
 
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-ios|AnyCPU'">
-	  <CreatePackage>false</CreatePackage>
-	</PropertyGroup>
 	<ItemGroup>
 		<!-- App Icon -->
 		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4" />
@@ -70,50 +60,66 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <None Remove="Models\" />
-	  <None Remove="Resources\ApiKey\appsettings.json" />
-	  <None Remove="Resources\Images\open_weather_logo.png" />
-	  <None Remove="sqlite-net-pcl" />
-	  <None Remove="Xam.Plugin.Geolocator" />
-	  <None Remove="Resources\.DS_Store" />
-	  <None Remove="Xam.Plugins.Notifier" />
-	  <None Remove="Acr.UserDialogs" />
-	  <None Remove="SQLitePCLRaw.bundle_green" />
-	  <None Remove="Newtonsoft.Json" />
-	  <None Remove="Plugin.LocalNotification" />
+		<None Remove="Models\" />
+		<None Remove="Resources\ApiKey\appsettings.json" />
+		<None Remove="Resources\Images\open_weather_logo.png" />
+		<None Remove="sqlite-net-pcl" />
+		<None Remove="Xam.Plugin.Geolocator" />
+		<None Remove="Resources\.DS_Store" />
+		<None Remove="Xam.Plugins.Notifier" />
+		<None Remove="Acr.UserDialogs" />
+		<None Remove="SQLitePCLRaw.bundle_green" />
+		<None Remove="Newtonsoft.Json" />
+		<None Remove="Plugin.LocalNotification" />
 	</ItemGroup>
 	<ItemGroup>
-	  <BundleResource Include="Resources\.DS_Store" />
+		<BundleResource Include="Resources\.DS_Store" />
 	</ItemGroup>
 	<ItemGroup>
-	  <EmbeddedResource Include="Resources\ApiKey\appsettings.json">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </EmbeddedResource>
+		<EmbeddedResource Include="Resources\ApiKey\appsettings.json">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</EmbeddedResource>
 	</ItemGroup>
 	<ItemGroup>
-	  <MauiXaml Update="MapPage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Condition=" '$(EnableDefaultXamlItems)' == 'true' " Update="MeteoItemPage.xaml">
-	    <SubType>Designer</SubType>
-	  </MauiXaml>
-	  <MauiXaml Update="TestPage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
+		<MauiXaml Update="MapPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="MeteoItemPage.xaml">
+			<SubType>Designer</SubType>
+		</MauiXaml>
+		<MauiXaml Update="WeatherBlazorPage.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="WeatherBlazorPage.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="TestPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
 	</ItemGroup>
 	<ItemGroup>
-	  <Compile Update="MapPage.xaml.cs">
-	    <DependentUpon>MapPage.xaml</DependentUpon>
-	  </Compile>
-	  <Compile Condition=" '$(EnableDefaultCompileItems)' == 'true' " Update="MeteoListPage.xaml.cs">
-	    <DependentUpon>MeteoListPage.xaml</DependentUpon>
-	  </Compile>
-	  <Compile Update="TestPage.xaml.cs">
-	    <DependentUpon>TestPage.xaml</DependentUpon>
-	  </Compile>
+		<Compile Update="MapPage.xaml.cs">
+			<DependentUpon>MapPage.xaml</DependentUpon>
+		</Compile>
+		<Compile Update="MeteoListPage.xaml.cs">
+			<DependentUpon>MeteoListPage.xaml</DependentUpon>
+		</Compile>
+		<Compile Update="WeatherBlazorPage.xaml.cs">
+		  <DependentUpon>WeatherBlazorPage.xaml</DependentUpon>
+		</Compile>
+		<Compile Update="TestPage.xaml.cs">
+			<DependentUpon>TestPage.xaml</DependentUpon>
+		</Compile>
+		<Compile Update="WeatherBlazorPage.xaml.cs">
+			<DependentUpon>WeatherBlazorPage.xaml</DependentUpon>
+		</Compile>
 	</ItemGroup>
 	<ItemGroup>
-	  <PackageReference Update="Microsoft.Maui.Controls.Compatibility" Version="8.0.92" />
+		<PackageReference Update="Microsoft.Maui.Controls.Compatibility" Version="8.0.92" />
 	</ItemGroup>
-	<ProjectExtensions><VisualStudio><UserProperties XamarinHotReloadGenericExceptionInfoBarMeteoAppMauiHideInfoBar="True" /></VisualStudio></ProjectExtensions>	
+	<ProjectExtensions>
+		<VisualStudio>
+			<UserProperties XamarinHotReloadGenericExceptionInfoBarMeteoAppMauiHideInfoBar="True" />
+		</VisualStudio>
+	</ProjectExtensions>
 </Project>

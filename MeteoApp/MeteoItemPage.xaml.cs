@@ -1,5 +1,6 @@
 ﻿using MeteoApp.Services;
 using MeteoApp.ViewModels;
+using System.Diagnostics;
 
 namespace MeteoApp;
 
@@ -27,5 +28,16 @@ public partial class MeteoItemPage : ContentPage
         base.OnAppearing();
 
         await _viewModel.LoadWeatherInfoAsync();
+    }
+
+    private async void OnCompleteAddressClicked(object sender, EventArgs e)
+    {
+        // Navigazione alla pagina Blazor
+        await Navigation.PushAsync(new WeatherBlazorPage(GetMeteoItemWeatherInfo()));
+    }
+
+    public WeatherInfo GetMeteoItemWeatherInfo()
+    {
+        return _viewModel.WeatherInfo;
     }
 }

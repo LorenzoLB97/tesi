@@ -56,7 +56,12 @@ public static class MauiProgram
 		builder.Services.AddTransient<MeteoListViewModel>();
 		builder.Services.AddTransient<MapPage>();
 
+        builder.Services.AddTransient<WeatherBlazorPage>();
+
+        builder.Services.AddMauiBlazorWebView();
+
 #if DEBUG
+        builder.Services.AddBlazorWebViewDeveloperTools();
         builder.Logging.AddDebug();
 #endif
         return builder.Build();

@@ -1,0 +1,22 @@
+﻿@page "/weatherinfo"
+
+<PageTitle>Weather Details</PageTitle>
+
+<h3>Weather Details</h3>
+
+@if (MeteoApp.WeatherBlazorPage.SharedWeatherInfo != null)
+
+{
+    <p><strong>Location:</strong> @MeteoApp.WeatherBlazorPage.SharedWeatherInfo.Name</p>
+    <p><strong>Temperature:</strong> @MeteoApp.WeatherBlazorPage.SharedWeatherInfo.Main.TempCelsius.ToString("F2") °C</p>
+    <p><strong>Feels Like:</strong> @MeteoApp.WeatherBlazorPage.SharedWeatherInfo.Main.FeelsLikeCelsius.ToString("F2") °C</p>
+    <p><strong>Wind Speed:</strong> @MeteoApp.WeatherBlazorPage.SharedWeatherInfo.Wind.Speed m/s</p>
+    <p><strong>Cloud Coverage:</strong> @MeteoApp.WeatherBlazorPage.SharedWeatherInfo.Clouds.All %</p>
+    <p><strong>Description:</strong> @MeteoApp.WeatherBlazorPage.SharedWeatherInfo.Weather.FirstOrDefault()?.Description</p>
+}
+
+else
+
+{
+    <p>Loading...</p>
+}

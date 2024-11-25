@@ -2,26 +2,36 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="MeteoApp.MeteoItemPage"
+             xmlns:local="clr-namespace:MeteoApp" 
              BackgroundColor="#f0f0f0">
+    <ContentPage.Behaviors>
+        <!-- Eventualmente aggiungi comportamenti se necessario -->
+    </ContentPage.Behaviors>
+
     <ScrollView>
         <StackLayout x:Name="MainLayout" Spacing="25" Padding="20" BackgroundColor="White">
 
-            <!-- Titolo -->
-            <Label Text="{Binding Entry.CompleteAddress}"
-                   FontSize="28"
-                   TextColor="#2c3e50"
-                   FontAttributes="Bold"
-                   HorizontalOptions="Center" 
-                   VerticalOptions="Start" />
+            <!-- Contenuto -->
+            <Button Text="{Binding Entry.CompleteAddress}"
+                    FontSize="20"
+                    TextColor="#2c3e50"
+                    FontAttributes="Bold"
+                    BackgroundColor="LightBlue"
+                    BorderWidth="2"
+                    BorderColor="Black"
+                    CornerRadius="10"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Start"
+                    Clicked="OnCompleteAddressClicked">
+                <Button.LineBreakMode>WordWrap</Button.LineBreakMode>
+            </Button>
 
-            <!-- Icona del meteo -->
             <Image Source="{Binding WeatherInfo.Weather[0].IconUrl}" 
                    WidthRequest="100" 
                    HeightRequest="100"
                    HorizontalOptions="Center"
                    VerticalOptions="Start" />
 
-            <!-- Condizioni Meteo -->
             <Label Text="{Binding WeatherInfo.Weather[0].MainDescription}"
                    FontSize="22"
                    TextColor="#34495e"
@@ -33,10 +43,9 @@
                    TextColor="#7f8c8d"
                    HorizontalOptions="Center" />
 
-            <!-- Separator -->
             <BoxView HeightRequest="2" BackgroundColor="#ecf0f1" HorizontalOptions="Fill" />
 
-            <!-- Sezione Dati Meteo -->
+            <!-- Griglia dei dati meteo -->
             <Grid Padding="0" ColumnSpacing="15" RowSpacing="20">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
@@ -47,28 +56,14 @@
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
 
-                <!-- Temperatura -->
                 <StackLayout Grid.Row="0" Grid.Column="0" HorizontalOptions="Center">
                     <Label Text="Temperatura" FontSize="16" TextColor="#2c3e50" FontAttributes="Bold" />
                     <Label Text="{Binding WeatherInfo.Main.TempCelsius, StringFormat='{0:F2} °C'}" FontSize="20" TextColor="#3498db" />
                 </StackLayout>
 
-                <!-- Velocità Vento -->
                 <StackLayout Grid.Row="0" Grid.Column="1" HorizontalOptions="Center">
                     <Label Text="Vento" FontSize="16" TextColor="#2c3e50" FontAttributes="Bold" />
                     <Label Text="{Binding WeatherInfo.Wind.Speed, StringFormat='{0} m/s'}" FontSize="20" TextColor="#3498db" />
-                </StackLayout>
-
-                <!-- Pioggia Ultima Ora -->
-                <StackLayout Grid.Row="1" Grid.Column="0" HorizontalOptions="Center">
-                    <Label Text="Pioggia (Ultima Ora)" FontSize="16" TextColor="#2c3e50" FontAttributes="Bold" />
-                    <Label Text="{Binding WeatherInfo.Rain.OneHour, StringFormat='{0} mm'}" FontSize="20" TextColor="#3498db" />
-                </StackLayout>
-
-                <!-- Nuvole -->
-                <StackLayout Grid.Row="1" Grid.Column="1" HorizontalOptions="Center">
-                    <Label Text="Nuvole" FontSize="16" TextColor="#2c3e50" FontAttributes="Bold" />
-                    <Label Text="{Binding WeatherInfo.Clouds.All, StringFormat='{0}%'}" FontSize="20" TextColor="#3498db" />
                 </StackLayout>
             </Grid>
 
