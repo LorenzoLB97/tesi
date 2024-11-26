@@ -24,7 +24,90 @@
     </div>
 
     <script src="_framework/blazor.webview.js" autostart="false"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        function drawTemperatureChart(hours, temperatures) {
+            const ctx = document.getElementById('temperatureChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: hours,
+                    datasets: [{
+                        label: 'Temperature (°C)',
+                        data: temperatures,
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        fill: true,
+                        tension: 0.4,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: true,
+                        }
+                    },
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Hour'
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Temperature (°C)'
+                            },
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        function drawWindChart(hours, wind) {
+            const ctx = document.getElementById('windChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: hours,
+                    datasets: [{
+                        label: 'Wind (km/h)',
+                        data: wind,
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        fill: true,
+                        tension: 0.4,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: true,
+                        }
+                    },
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Hour'
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Wind (km/h))'
+                            },
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+    </script>
 
 </body>
-
 </html>
