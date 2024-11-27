@@ -51,11 +51,11 @@ public static class MauiProgram
         builder.Services.AddSingleton<GeoLocationService>();
 		// Registra MyDatabase come singleton per DI
 		builder.Services.AddSingleton<MyDatabase>();
-		// Registra le classi che hanno bisogno di Dependency Injection
-		builder.Services.AddTransient<MeteoListPage>();
+        builder.Services.AddSingleton<AppwriteService>();
+        // Registra le classi che hanno bisogno di Dependency Injection
+        builder.Services.AddTransient<MeteoListPage>();
 		builder.Services.AddTransient<MeteoListViewModel>();
 		builder.Services.AddTransient<MapPage>();
-
         builder.Services.AddTransient<WeatherBlazorPage>();
 
         builder.Services.AddMauiBlazorWebView();

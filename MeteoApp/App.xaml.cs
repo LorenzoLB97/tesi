@@ -12,6 +12,7 @@ public partial class App : Application
 
     private readonly MyDatabase _database; // Variabile privata per memorizzare l'istanza
     private readonly MeteoListPage _mainPage;
+    private readonly AppwriteService _appwriteService;
 
     public App(IServiceProvider services)
 	{
@@ -22,7 +23,16 @@ public partial class App : Application
 
         // Inietta le dipendenze tramite il provider di servizi
         _database = services.GetRequiredService<MyDatabase>();
+        _appwriteService = services.GetRequiredService<AppwriteService>();
         _mainPage = services.GetRequiredService<MeteoListPage>();
+
+        //Appwrite settings
+        bool isFirstRun = Preferences.Get("isFirstRun", true);
+        if (isFirstRun)
+        {
+            PerformFirstTimeSetup();
+            Preferences.Set("isFirstRun", false);
+        }
 
         // Imposta la pagina principale come _mainPage
         MainPage = _mainPage;
@@ -49,6 +59,11 @@ public partial class App : Application
         if (loadedEntries.Count > 1) //esistono già delle personalEntries
         {
             (reference.BindingContext as MeteoListViewModel).Entries = loadedEntries;
-        }
+        } //finire persistenza APPWRITE
+    }
+
+    private async void PerformFirstTimeSetup()
+    {
+        await _appwriteService.CreateAppwriteDB();
     }
 }
