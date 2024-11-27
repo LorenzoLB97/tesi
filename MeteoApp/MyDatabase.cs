@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System;
 using SQLite;
+using MeteoApp.Services;
 
 namespace MeteoApp
 {
@@ -32,11 +33,15 @@ namespace MeteoApp
         private SQLiteConnection Database {  get; set; }
         private int CurrentLocationEntryId { get; set; } = 1;
 
-        public MyDatabase()
+        private readonly AppwriteService _appwriteService;
+
+        public MyDatabase(AppwriteService appwriteService)
         {
             var dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "MyDatabase.db");
             Database = new SQLiteConnection(dbPath);
             Database.CreateTable<Entry>();
+
+            _appwriteService = appwriteService;
         }
 
         public List<Entry> GetEntries()
@@ -52,8 +57,10 @@ namespace MeteoApp
             return Database.Table<Entry>().ToList().FirstOrDefault();
         }
 
-        public int SaveEntry(Entry entry)
+        public async Task<int> SaveEntry(Entry entry)
         {
+            await _appwriteService.appWriteTestConnection();
+            await _appwriteService.SaveEntryAsync(entry); 
             return Database.Insert(entry);
         }
 

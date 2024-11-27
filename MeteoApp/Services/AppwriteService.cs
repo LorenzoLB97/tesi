@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,7 +10,7 @@ using Appwrite.Services;
 
 namespace MeteoApp.Services
 {
-    internal class AppwriteService
+    public class AppwriteService
     {
         private readonly Client _client;
         private readonly Databases _databases; //salviamo il riferimento a databases
@@ -32,28 +33,55 @@ namespace MeteoApp.Services
 
         public async Task CreateAppwriteDB()
         {
-            Database todoDatabase;
-            Collection todoCollection;
+            try
+            {
+                // Recupera il database esistente
+                var existingDatabase = await _databases.List(); // Ottieni l'elenco dei database
+                if (!existingDatabase.Databases.Any(db => db.Id == DatabaseId))
+                {
+                    // Crea un nuovo database solo se non esiste
+                    await _databases.Create(databaseId: DatabaseId, name: "TodosDB");
+                    Console.WriteLine("Database creato con successo.");                    
+                }
+                else
+                {
+                    Console.WriteLine("Il database esiste già. Nessuna creazione necessaria.");
+                }
 
-            await _databases.Create(databaseId: DatabaseId, name: "TodosDB");
-
-            todoCollection = await _databases.CreateCollection(
-                databaseId: DatabaseId,
-                collectionId: CollectionId,
-                name: "Todos"
-            );
-
-            await _databases.CreateStringAttribute(
-                databaseId: DatabaseId,
-                collectionId: CollectionId,
-                key: "title",
-                size: 255,
-                required: true
-            );
+                // Recupera la collezione esistente
+                var collections = await _databases.ListCollections(DatabaseId);
+                if (!collections.Collections.Any(c => c.Id == CollectionId))
+                {
+                    // Crea una nuova collezione solo se non esiste
+                    await _databases.CreateCollection(
+                        databaseId: DatabaseId,
+                        collectionId: CollectionId,
+                        name: "Todos"
+                    );
+                    await _databases.CreateStringAttribute(
+                        databaseId: DatabaseId,
+                        collectionId: CollectionId,
+                        key: "title",
+                        size: 255,
+                        required: true
+                    );
+                    Console.WriteLine("Collezione creata con successo.");
+                }
+                else
+                {
+                    Console.WriteLine("La collezione esiste già. Nessuna creazione necessaria.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Errore durante la creazione del database o collezione: {ex.Message}");
+            }
         }
+
 
         public async Task SaveEntryAsync(Entry entry)
         {
+            Debug.WriteLine("1 WWWWWWWWWWWWWWW SAVE ENTRY APPWRITE");
             try
             {
                 // Converti l'oggetto Entry in un dizionario
@@ -69,6 +97,8 @@ namespace MeteoApp.Services
                     { "IsCurrentLocation", entry.IsCurrentLocation }
                 };
 
+                Debug.WriteLine("2 WWWWWWWWWWWWWWW SAVE ENTRY APPWRITE");
+
                 // Salva l'entry nella collezione
                 var result = await _databases.CreateDocument(
                     databaseId: DatabaseId,
@@ -77,13 +107,15 @@ namespace MeteoApp.Services
                     data: data
                 );
 
-                Console.WriteLine("Entry salvata con successo in Appwrite:");
-                Console.WriteLine(result);
+                Debug.WriteLine("Entry salvata con successo in Appwrite:");
+                Debug.WriteLine(result);
+
+                Debug.WriteLine("3 WWWWWWWWWWWWWWW SAVE ENTRY APPWRITE");
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Errore durante il salvataggio dell'entry in Appwrite:");
-                Console.WriteLine(ex.Message);
+                Debug.WriteLine("Errore durante il salvataggio dell'entry in Appwrite:");
+                Debug.WriteLine(ex.Message);
             }
         }
 
@@ -144,6 +176,21 @@ namespace MeteoApp.Services
             {
                 Console.WriteLine("Errore durante l'eliminazione del documento:");
                 Console.WriteLine(ex.Message);
+            }
+        }
+
+        public async Task appWriteTestConnection()
+        {
+            Debug.WriteLine("WWWWWWW TEST CONNECTION APPWRITE");
+            try
+            {
+                var response = await _databases.List();
+                Debug.WriteLine($"Connessione riuscita! Trovati {response.Databases.Count} database.");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Errore durante la connessione ad Appwrite:");
+                Debug.WriteLine(ex.Message);
             }
         }
     }
