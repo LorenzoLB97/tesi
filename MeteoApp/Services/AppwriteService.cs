@@ -141,6 +141,7 @@ namespace MeteoApp.Services
 
         public async Task DeleteEntryAsync(Entry entry)
         {
+            Debug.WriteLine("1 WWWWWWWWWWWWWWW DELETE ENTRY APPWRITE");
             try
             {
                 // Cerca il documento corrispondente utilizzando Latitude e Longitude
@@ -149,10 +150,12 @@ namespace MeteoApp.Services
                     collectionId: CollectionId,
                     queries: new List<string>
                     {
-                        $"equal(\"Latitude\", {entry.Latitude})",
-                        $"equal(\"Longitude\", {entry.Longitude})"
+                        $"equal(\"latitude\", {entry.Latitude})",
+                        $"equal(\"longitude\", {entry.Longitude})"
                     }
                 );
+
+                Debug.WriteLine("2 WWWWWWWWWWWWWWW DELETE ENTRY APPWRITE");
 
                 if (documents.Total == 0)
                 {

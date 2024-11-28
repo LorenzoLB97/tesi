@@ -87,8 +87,9 @@ namespace MeteoApp
             }
         }
 
-        public void Remove(Entry entryToRemove)
+        public async void Remove(Entry entryToRemove)
         {
+            await _appwriteService.DeleteEntryAsync(entryToRemove);
             Database.Delete(entryToRemove);
         }
 

@@ -13,12 +13,13 @@ public partial class MeteoListPage : Shell
     private readonly GeoLocationService _geoLocationService;
     private readonly MeteoListViewModel _viewModel;
     private readonly MyDatabase _database;
+    private bool _isSwipeInProgress = false; // Flag per gestire lo swipe
 
     public Dictionary<string, Type> Routes { get; private set; } = new Dictionary<string, Type>();
 
     public MeteoListPage(MyDatabase myDatabase, GeoLocationService geoLocationService)
-	{
-		InitializeComponent();
+    {
+        InitializeComponent();
 
         RegisterRoutes();
         _database = myDatabase;
@@ -40,13 +41,12 @@ public partial class MeteoListPage : Shell
     // Metodo che verrà chiamato quando la pagina è attiva dopo la navigazione
     private void OnNavigated(object sender, ShellNavigatedEventArgs e)
     {
-        // Verifica se la pagina corrente è MeteoListPage confrontando l'istanza, metodo poco ortodosso lo so
-        // ma é l'unico che funziona
-        if(Shell.Current.CurrentPage.GetType().FullName.Equals("Microsoft.Maui.Controls.ContentPage"))
+        // Verifica se la pagina corrente è MeteoListPage confrontando l'istanza
+        if (Shell.Current.CurrentPage.GetType().FullName.Equals("Microsoft.Maui.Controls.ContentPage"))
         {
             ReloadEntries();
         }
-    }   
+    }
 
     private void RegisterRoutes()
     {
@@ -60,6 +60,13 @@ public partial class MeteoListPage : Shell
 
     private void OnListItemSelected(object sender, SelectionChangedEventArgs e)
     {
+        if (_isSwipeInProgress)
+        {
+            // Ignora l'evento di selezione se uno swipe è in corso
+            _isSwipeInProgress = false;
+            return;
+        }
+
         if (e.CurrentSelection.FirstOrDefault() != null)
         {
             Entry entry = e.CurrentSelection.FirstOrDefault() as Entry;
@@ -75,17 +82,13 @@ public partial class MeteoListPage : Shell
         // Deseleziona l'elemento per consentire una nuova selezione in futuro
         ((CollectionView)sender).SelectedItem = null;
     }
+
     /**
      * A questo metodo va aggiunta la mappa di google maps
      */
     private async void OnItemAdded(object sender, EventArgs e)
     {
         await Shell.Current.GoToAsync(nameof(MapPage));
-    }
-
-    private async Task ShowPrompt()
-    {
-        await DisplayAlert("Add City", "To Be Implemented", "OK");
     }
 
     private async void OnTestPageClicked(object sender, EventArgs e)
@@ -104,25 +107,72 @@ public partial class MeteoListPage : Shell
         await _geoLocationService.GetCurrentLocation();
         _viewModel.RefreshEntries();
     }
-    /**
-    * Bug da fixare: se viene eliminate la CurrentLocation
-    * Bisogna ricaricarla
-    */
-    private void OnDeleteItemBySwipe(object sender, EventArgs e)
+
+    private void OnSwipeEnded(object sender, EventArgs e)
     {
+        _isSwipeInProgress = true; // Imposta il flag per ignorare la selezione
+
+        Debug.WriteLine("SWIPE");
         var swipeItem = sender as SwipeItem;
         var entryToDelete = swipeItem?.CommandParameter as Entry;
 
-        if (entryToDelete != null && !entryToDelete.IsCurrentLocation)
-        {
-            // Rimuove l'entry dal database e dall'ObservableCollection
-            // Funziona ma non si aggiorna la observable collection
-            _database.Remove(entryToDelete);
-            ReloadEntries();
-        }
-        else if (entryToDelete.IsCurrentLocation)
+        if (entryToDelete == null)
+            return;
+
+        if (entryToDelete.IsCurrentLocation)
         {
             DisplayAlert("Errore", "Non puoi eliminare la CurrentLocation", "Ok");
+            return;
+        }
+
+        // Rimuovi l'entry dal database
+        _database.Remove(entryToDelete);
+
+        // Rimuovi l'entry dalla ObservableCollection
+        if (BindingContext is MeteoListViewModel viewModel)
+        {
+            viewModel.Entries.Remove(entryToDelete);
+        }
+
+        _isSwipeInProgress = false; // Resetta il flag
+    }
+
+    private void OnDeleteItemBySwipe(object sender, EventArgs e)
+    {
+        _isSwipeInProgress = true; // Imposta il flag per ignorare la selezione
+
+        if (sender is SwipeItem swipeItem && swipeItem.CommandParameter is Entry entryToDelete)
+        {
+            if (entryToDelete.IsCurrentLocation)
+            {
+                DisplayAlert("Errore", "Non puoi eliminare la CurrentLocation", "Ok");
+                return;
+            }
+
+            // Rimuovi l'entry dal database
+            _database.Remove(entryToDelete);
+
+            // Rimuovi l'entry dalla ObservableCollection
+            _viewModel.Entries.Remove(entryToDelete);
+        }
+
+        _isSwipeInProgress = false; // Resetta il flag
+    }
+
+    // Remove the OnListItemSelected method
+
+    // Add this method
+    private void OnItemTapped(object sender, TappedEventArgs e)
+    {
+        if (e.Parameter is Entry entry)
+        {
+            var navigationParameter = new Dictionary<string, object>
+        {
+            { "Entry", entry }
+        };
+
+            Shell.Current.GoToAsync($"entrydetails", navigationParameter);
         }
     }
+
 }

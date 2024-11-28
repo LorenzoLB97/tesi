@@ -1,13 +1,14 @@
 ﻿<Shell xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
        xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
        x:Class="MeteoApp.MeteoListPage">
-    <ContentPage>
-        <ContentPage.ToolbarItems>
-            <ToolbarItem Text="TestPage" Clicked="OnTestPageClicked" />
-            <ToolbarItem Text="Add" Clicked="OnItemAdded" />
-        </ContentPage.ToolbarItems>
 
-        <ScrollView>
+    <ShellContent>
+        <ContentPage>
+            <ContentPage.ToolbarItems>
+                <ToolbarItem Text="TestPage" Clicked="OnTestPageClicked" />
+                <ToolbarItem Text="Add" Clicked="OnItemAdded" />
+            </ContentPage.ToolbarItems>
+
             <StackLayout Margin="20" Spacing="10">
 
                 <Label Text="Lista Località"
@@ -19,57 +20,65 @@
                        Margin="0,0,0,10" />
 
                 <!-- CollectionView con Swipe per delete -->
-                <CollectionView x:Name="zCollectionView" ItemsSource="{Binding Entries}" SelectionMode="Single" SelectionChanged="OnListItemSelected">
+                <CollectionView x:Name="zCollectionView"
+                ItemsSource="{Binding Entries}"
+                SelectionMode="None">
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
-                            <!-- SwipeView con stile migliorato -->
+                            <!-- SwipeView with SwipeItem -->
                             <SwipeView>
                                 <SwipeView.RightItems>
-                                    <SwipeItems>
+                                    <SwipeItems Mode="Execute">
                                         <SwipeItem
-                                            Text="Delete"
-                                            BackgroundColor="#e74c3c"
-                                            
-                                            Invoked="OnDeleteItemBySwipe"
-                                            CommandParameter="{Binding .}" />
+                            Text="Delete"
+                            BackgroundColor="#e74c3c"
+                            Invoked="OnDeleteItemBySwipe"
+                            CommandParameter="{Binding .}" />
                                     </SwipeItems>
                                 </SwipeView.RightItems>
 
-                                <!-- Contenuto principale dello SwipeView -->
+                                <!-- Main Content with TapGestureRecognizer -->
                                 <Frame CornerRadius="15"
-                                       Padding="15"
-                                       BackgroundColor="White"
-                                       HasShadow="True"
-                                       Margin="0,5">
+                       Padding="15"
+                       BackgroundColor="White"
+                       HasShadow="True"
+                       Margin="0,5">
+                                    <Frame.GestureRecognizers>
+                                        <TapGestureRecognizer Tapped="OnItemTapped"
+                                              CommandParameter="{Binding .}" />
+                                    </Frame.GestureRecognizers>
+
+                                    <!-- Your existing content -->
                                     <Grid>
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="Auto" />
                                             <RowDefinition Height="*" />
                                         </Grid.RowDefinitions>
 
-                                        <!-- Titolo -->
+                                        <!-- Title -->
                                         <Label Grid.Row="0"
-                                               Text="{Binding CompleteAddress}"
-                                               FontSize="18"
-                                               FontAttributes="Bold"
-                                               TextColor="#34495e"
-                                               HorizontalOptions="Start"
-                                               VerticalTextAlignment="Center"
-                                               Margin="0,0,0,5" />
+                               Text="{Binding CompleteAddress}"
+                               FontSize="18"
+                               FontAttributes="Bold"
+                               TextColor="#34495e"
+                               HorizontalOptions="Start"
+                               VerticalTextAlignment="Center"
+                               Margin="0,0,0,5" />
 
-                                        <!-- Dettagli aggiuntivi -->
+                                        <!-- Additional details -->
                                         <Label Grid.Row="1"
-                                               Text="Swipe per eliminare"
-                                               FontSize="14"
-                                               TextColor="#7f8c8d"
-                                               HorizontalOptions="Start" />
+                               Text="Swipe left to delete"
+                               FontSize="14"
+                               TextColor="#7f8c8d"
+                               HorizontalOptions="Start" />
                                     </Grid>
                                 </Frame>
                             </SwipeView>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
                 </CollectionView>
+
             </StackLayout>
-        </ScrollView>
-    </ContentPage>
+        </ContentPage>
+    </ShellContent>
 </Shell>
