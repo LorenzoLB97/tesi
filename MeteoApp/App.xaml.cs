@@ -33,8 +33,6 @@ public partial class App : Application
         if (isFirstRun)
         {
             PerformFirstTimeSetup();
-
-            //LoadAppwriteEntriesOnLocalDB();
         }
 
         // Imposta la pagina principale come _mainPage
@@ -48,7 +46,6 @@ public partial class App : Application
 
         if (isFirstRun)
         {
-            Debug.WriteLine("BLOCCO IF APPWRITE LOAD DB");
             await LoadAppwriteEntriesOnLocalDB();
         }
 
@@ -65,16 +62,10 @@ public partial class App : Application
 
         ObservableCollection<Entry> loadedEntries = new ObservableCollection<Entry>(_database.GetEntries());
 
-        foreach (var entry in loadedEntries) {
-            Debug.WriteLine("ENTRIES LOADEDENTRIES: " + entry.CompleteAddress);
-        }
-
         if (loadedEntries.Count > 1) //esistono già delle personalEntries
         {
             (reference.BindingContext as MeteoListViewModel).Entries = loadedEntries;
-        } //finire persistenza APPWRITE
-
-        Debug.WriteLine("DBDBDBDBDBDB FINITO LoadDBEntries");
+        } 
     }
 
     private async void PerformFirstTimeSetup()
@@ -87,8 +78,6 @@ public partial class App : Application
     {
         try
         {
-            Debug.WriteLine("SCNSSNCSNCNSNCS Inizio sincronizzazione delle entries da Appwrite al database locale...");
-
             // Recupera tutte le entries da Appwrite
             var entriesFromAppwrite = await _appwriteService.GetAllEntriesAsync();
 
@@ -105,9 +94,7 @@ public partial class App : Application
                 Debug.WriteLine($"Entry salvata nel database locale: {entry.CompleteAddress}");
             }
 
-            Debug.WriteLine("APPWRITE XXXX: Sincronizzazione delle entries completata.");
-
-            Preferences.Set("isFirstRun", false); //l'app non riesce a fare in fretta abbastanza a settare la flag su false
+            Preferences.Set("isFirstRun", false); 
 
         }
         catch (Exception ex)

@@ -81,7 +81,6 @@ namespace MeteoApp.Services
 
         public async Task SaveEntryAsync(Entry entry)
         {
-            Debug.WriteLine("1 WWWWWWWWWWWWWWW SAVE ENTRY APPWRITE");
             try
             {
                 // Converti l'oggetto Entry in un dizionario
@@ -97,8 +96,6 @@ namespace MeteoApp.Services
                     { "IsCurrentLocation", entry.IsCurrentLocation }
                 };
 
-                Debug.WriteLine("2 WWWWWWWWWWWWWWW SAVE ENTRY APPWRITE");
-
                 // Salva l'entry nella collezione
                 var result = await _databases.CreateDocument(
                     databaseId: DatabaseId,
@@ -109,8 +106,6 @@ namespace MeteoApp.Services
 
                 Debug.WriteLine("Entry salvata con successo in Appwrite:");
                 Debug.WriteLine(result);
-
-                Debug.WriteLine("3 WWWWWWWWWWWWWWW SAVE ENTRY APPWRITE");
             }
             catch (Exception ex)
             {
@@ -141,7 +136,6 @@ namespace MeteoApp.Services
 
         public async Task DeleteEntryAsync(Entry entry)
         {
-            Debug.WriteLine("1 WWWWWWWWWWWWWWW DELETE ENTRY APPWRITE");
             try
             {
                 // Cerca il documento corrispondente utilizzando Latitude e Longitude
@@ -154,8 +148,6 @@ namespace MeteoApp.Services
                         $"equal(\"longitude\", {entry.Longitude})"
                     }
                 );
-
-                Debug.WriteLine("2 WWWWWWWWWWWWWWW DELETE ENTRY APPWRITE");
 
                 if (documents.Total == 0)
                 {
@@ -184,7 +176,6 @@ namespace MeteoApp.Services
 
         public async Task appWriteTestConnection()
         {
-            Debug.WriteLine("WWWWWWW TEST CONNECTION APPWRITE");
             try
             {
                 var response = await _databases.List();

@@ -28,7 +28,7 @@ public class GeoLocationService
 
     public async Task GetCurrentLocation()
     {
-        Debug.WriteLine("TIMERRR ACTIVATION! XXXXXXXXXXXXXXXXXXXXXXXXXXXXXxxxx");
+        Debug.WriteLine("ACQUISIZIONE CURRENTLOCATION");
         try
         {
             var permissions = await Permissions.CheckStatusAsync<Permissions.LocationWhenInUse>();
@@ -143,11 +143,6 @@ public class GeoLocationService
         // Sostituisci la collezione e chiama OnPropertyChanged
         Debug.WriteLine("Prima acquisizione e sostituzione di currentLocation");
         meteoListViewModelContext.Entries = newEntries; //fin qua dovrebbe essere tutto ok.
-
-        Debug.WriteLine("CHECK DELLE ENTRIES IN ADDTODBCURRENTLOCATION: ");
-        foreach (var entry in newEntries) {
-            Debug.WriteLine("Entry in newEntries: " + entry.CompleteAddress + ", isCurrentLocation: " + entry.IsCurrentLocation);
-        }
     }
 
     public BaseViewModel GetBindingContext()
