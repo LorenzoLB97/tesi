@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System;
 using SQLite;
 using MeteoApp.Services;
+using System.Diagnostics;
 
 namespace MeteoApp
 {
@@ -57,10 +58,19 @@ namespace MeteoApp
             return Database.Table<Entry>().ToList().FirstOrDefault();
         }
 
+        //Soluzione: fare 2 saveEntry, una solo per la sincronizzazione con appwrite? (SI, é la piu semplice soluzione)
         public async Task<int> SaveEntry(Entry entry)
         {
-            await _appwriteService.appWriteTestConnection();
-            await _appwriteService.SaveEntryAsync(entry); 
+            Debug.WriteLine("XXXXX DENTRO A SAVEENTRY, FIRSTRUN? " + App.isFirstRun);
+            //await _appwriteService.appWriteTestConnection();
+            
+            await _appwriteService.SaveEntryAsync(entry);
+            
+            return Database.Insert(entry);
+        }
+
+        public int SaveEntryFromAppwrite(Entry entry)
+        {
             return Database.Insert(entry);
         }
 
@@ -72,20 +82,23 @@ namespace MeteoApp
          */
         public void UpsertCurrentLocation(Entry newCurrentLocationEntry)
         {
-            // Trova la current location esistente
+            // Find the existing current location entry
             var existingEntry = Database.Table<Entry>().FirstOrDefault(e => e.IsCurrentLocation);
 
-            if (existingEntry != null) // Se la current location esiste già
+            if (existingEntry != null)
             {
-                // Aggiorna l'entry esistente
+                // Ensure the new entry has the same Id as the existing one
+                newCurrentLocationEntry.Id = existingEntry.Id;
+                // Update the existing entry
                 Database.Update(newCurrentLocationEntry);
             }
             else
-            {                
-                // Inserisci un nuovo record
+            {
+                // Insert the new current location entry
                 Database.Insert(newCurrentLocationEntry);
             }
         }
+
 
         public async void Remove(Entry entryToRemove)
         {

@@ -13,7 +13,7 @@ public class GeoLocationService
     private readonly MyDatabase _database;
     private readonly Timer _timer;
     private BaseViewModel _bindingContext;
-    private readonly int _updateCurrentLocationTimer = 15; //variabile da modificare in base al periodo di aggiornamento desiderato
+    private readonly int _updateCurrentLocationTimer = 10; //variabile da modificare in base al periodo di aggiornamento desiderato
 
     public GeoLocationService(MyDatabase database)
     {
@@ -122,7 +122,7 @@ public class GeoLocationService
     {
         //Inserisce o aggiorna con la nuova currentLocation
         //Ok
-        _database.UpsertCurrentLocation(currentLocationEntry);
+        _database.UpsertCurrentLocation(currentLocationEntry); //ok, ha aggiornato la entry nel DB
 
         MeteoListViewModel meteoListViewModelContext = _bindingContext as MeteoListViewModel;
 
@@ -130,15 +130,24 @@ public class GeoLocationService
         ObservableCollection<Entry> newEntries = new ObservableCollection<Entry>(meteoListViewModelContext.Entries);
 
         // Rimuovi la vecchia currentLocation (se esiste) e aggiungi la nuova
-        var previousCurrentLocation = newEntries.FirstOrDefault<Entry>(e => e.IsCurrentLocation);
-        if (previousCurrentLocation != null)
+        //C'é un bug da qualche parte che duplica la currentLocation, non riesco a trovarlo e per ora lo risolvo cosi.
+        var entriesToRemove = newEntries.Where(e => e.IsCurrentLocation).ToList();
+        foreach (var entry in entriesToRemove)
         {
-            newEntries.Remove(previousCurrentLocation);
+            newEntries.Remove(entry);
         }
-        newEntries.Insert(0, currentLocationEntry); // Inserisci la nuova CurrentLocation in cima
+
+        // Inserisci la nuova CurrentLocation in cima
+        newEntries.Insert(0, currentLocationEntry);
 
         // Sostituisci la collezione e chiama OnPropertyChanged
-        meteoListViewModelContext.Entries = newEntries;
+        Debug.WriteLine("Prima acquisizione e sostituzione di currentLocation");
+        meteoListViewModelContext.Entries = newEntries; //fin qua dovrebbe essere tutto ok.
+
+        Debug.WriteLine("CHECK DELLE ENTRIES IN ADDTODBCURRENTLOCATION: ");
+        foreach (var entry in newEntries) {
+            Debug.WriteLine("Entry in newEntries: " + entry.CompleteAddress + ", isCurrentLocation: " + entry.IsCurrentLocation);
+        }
     }
 
     public BaseViewModel GetBindingContext()

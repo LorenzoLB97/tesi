@@ -196,5 +196,46 @@ namespace MeteoApp.Services
                 Debug.WriteLine(ex.Message);
             }
         }
+
+        //da testare FIXARE
+        public async Task<List<Entry>> GetAllEntriesAsync()
+        {
+            var entries = new List<Entry>();
+
+            try
+            {
+                // Recupera tutti i documenti dalla collezione di Appwrite
+                var documents = await _databases.ListDocuments(
+                    databaseId: DatabaseId,
+                    collectionId: CollectionId
+                );
+
+                foreach (var document in documents.Documents)
+                {
+                    // Crea un'istanza di Entry usando i dati del documento
+                    var entry = new Entry
+                    {
+                        Id = int.TryParse(document.Id, out int id) ? id : 0,
+                        CompleteAddress = document.Data["completeAddress"]?.ToString(),
+                        Street = document.Data["street"]?.ToString(),
+                        City = document.Data["city"]?.ToString(),
+                        PostalCode = document.Data["postalCode"]?.ToString(),
+                        Country = document.Data["country"]?.ToString(),
+                        Latitude = double.TryParse(document.Data["latitude"]?.ToString(), out double lat) ? lat : 0.0,
+                        Longitude = double.TryParse(document.Data["longitude"]?.ToString(), out double lng) ? lng : 0.0,
+                        IsCurrentLocation = bool.TryParse(document.Data["isCurrentLocation"]?.ToString(), out bool isCurrent) ? isCurrent : false
+                    };
+
+                    entries.Add(entry);
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Errore durante il recupero delle entries da Appwrite: {ex.Message}");
+            }
+
+            return entries;
+        }
+
     }
 }

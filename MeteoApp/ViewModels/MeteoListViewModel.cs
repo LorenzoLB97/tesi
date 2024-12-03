@@ -21,12 +21,16 @@ namespace MeteoApp
             set
             {
                 _entries = value;
-                OnPropertyChanged();
 
                 if (value.FirstOrDefault() != null)
                 {
-                    Debug.WriteLine("VALORE DI CURRENTLOCATION CORRENTE: " + value.FirstOrDefault().CompleteAddress);
+                    Debug.WriteLine("(Al primo avvio non é corretto) VALORE DI CURRENTLOCATION CORRENTE: " + value.FirstOrDefault().CompleteAddress);
                 }
+
+                // Sort the entries so that currentLocation is first
+                var sortedEntries = value.OrderByDescending(e => e.IsCurrentLocation);
+                _entries = new ObservableCollection<Entry>(sortedEntries);
+                OnPropertyChanged();
             }
         }
 
