@@ -39,7 +39,7 @@ public partial class App : Application
 
         reference.GetCurrentLocation();
     }
-
+    
     private void LoadDBEntries()
     {
         MeteoListPage reference = MainPage as MeteoListPage;
