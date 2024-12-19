@@ -63,12 +63,15 @@ public partial class MeteoListPage : Shell
             Entry entry = e.CurrentSelection.FirstOrDefault() as Entry;
 
             var navigationParameter = new Dictionary<string, object>
-            {
-                { "Entry", entry }
-            };
+        {
+            { "Entry", entry }
+        };
 
             Shell.Current.GoToAsync($"entrydetails", navigationParameter);
         }
+
+    // Deseleziona l'elemento per consentire una nuova selezione
+    ((CollectionView)sender).SelectedItem = null;
     }
     /**
      * A questo metodo va aggiunta la mappa di google maps
