@@ -10,15 +10,13 @@ public partial class App : Application
     private readonly MyDatabase _database; // Variabile privata per memorizzare l'istanza
     private readonly MeteoListPage _mainPage;
 
-    public App(IServiceProvider services)
+    public App(MyDatabase database, MeteoListPage mainPage)
 	{
         SQLitePCL.Batteries_V2.Init(); // Inizializza SQLite
         InitializeComponent();
-        Services = services;
 
-        // Inietta le dipendenze tramite il provider di servizi
-        _database = services.GetRequiredService<MyDatabase>();
-        _mainPage = services.GetRequiredService<MeteoListPage>();
+        _database = database;
+        _mainPage = mainPage;
 
         // Imposta la pagina principale come _mainPage
         MainPage = _mainPage;
