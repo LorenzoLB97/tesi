@@ -33,22 +33,19 @@ public partial class App : Application
     {
         base.OnStart();
 
-        loadDBEntries();
+        LoadDBEntries();
         
         var reference = MainPage as MeteoListPage;
 
         reference.GetCurrentLocation();
     }
 
-    private async void loadDBEntries()
+    private void LoadDBEntries()
     {
         MeteoListPage reference = MainPage as MeteoListPage;
-        Debug.WriteLine("AAAAAAAAAAAAAAA QUI1");
 
         if (_database != null)
         {
-            Debug.WriteLine("AAAAAAAAAAAAAAA QUI2");
-
             ObservableCollection<Entry> loadedEntries = new ObservableCollection<Entry>(Database.GetEntries());
 
             if (loadedEntries.Count > 1) //esistono già delle personalEntries
