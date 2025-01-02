@@ -2,10 +2,12 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="MeteoApp.WeatherBlazorPage"
-            xmlns:local="clr-namespace:MeteoApp">
+            xmlns:local="clr-namespace:MeteoApp">
+
     <BlazorWebView HostPage="wwwroot/index.html">
         <BlazorWebView.RootComponents>
             <RootComponent Selector="#app" ComponentType="{x:Type local:Components.Pages.WeatherDetails}" />
         </BlazorWebView.RootComponents>
-    </BlazorWebView>
+    </BlazorWebView>
+
 </ContentPage>
