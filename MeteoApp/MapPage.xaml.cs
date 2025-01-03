@@ -2,6 +2,7 @@
 using Microsoft.Maui.Controls;
 using Microsoft.Maui.Controls.Maps;
 using Microsoft.Maui.Maps;
+using System.Diagnostics;
 
 namespace MeteoApp;
 
@@ -46,6 +47,8 @@ public partial class MapPage : ContentPage
 
     async void OnMapClicked(object sender, MapClickedEventArgs e)
     {
+        Debug.WriteLine("CCCCCCCCCCCCCC controllo 1");
+
         Entry newEntry = await _geoLocationService.ReverseGeoCoding(e.Location);
         if (newEntry != null)
         {

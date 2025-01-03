@@ -13,7 +13,7 @@ public class GeoLocationService
     private readonly MyDatabase _database;
     private readonly Timer _timer;
     private BaseViewModel _bindingContext;
-    private readonly int _updateCurrentLocationTimer = 10; //variabile da modificare in base al periodo di aggiornamento desiderato
+    private readonly int _updateCurrentLocationTimer = 3; //variabile da modificare in base al periodo di aggiornamento desiderato
 
     public GeoLocationService(MyDatabase database)
     {

@@ -63,9 +63,9 @@ namespace MeteoApp
         {
             Debug.WriteLine("XXXXX DENTRO A SAVEENTRY, FIRSTRUN? " + App.isFirstRun);
             //await _appwriteService.appWriteTestConnection();
-            
+
             await _appwriteService.SaveEntryAsync(entry);
-            
+
             return Database.Insert(entry);
         }
 
