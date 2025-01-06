@@ -63,6 +63,7 @@
 	<ItemGroup>
 		<None Remove="Models\" />
 		<None Remove="Resources\ApiKey\appsettings.json" />
+		<None Remove="Resources\Images\current_location.svg" />
 		<None Remove="Resources\Images\open_weather_logo.png" />
 		<None Remove="sqlite-net-pcl" />
 		<None Remove="Xam.Plugin.Geolocator" />
