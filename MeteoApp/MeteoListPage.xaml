@@ -4,82 +4,116 @@
 
     <ShellContent>
         <ContentPage Background="Azure">
+            <!-- Toolbar -->
             <ContentPage.ToolbarItems>
-                <ToolbarItem Text="TestPage" Clicked="OnTestPageClicked" />
                 <ToolbarItem Text="Add" Clicked="OnItemAdded" />
             </ContentPage.ToolbarItems>
 
-            <StackLayout Margin="20" Spacing="10">
+            <!-- ScrollView per abilitare lo scrolling -->
+            <ScrollView>
+                <VerticalStackLayout Margin="20" Spacing="10">
 
-                <Label Text="Location List"
-                       FontSize="24"
-                       FontAttributes="Bold"
-                       TextColor="#2c3e50"
-                       HorizontalOptions="Center"
-                       VerticalOptions="Start"
-                       Margin="0,0,0,0" />
+                    <!-- Current Location Section -->
+                    <Label Text="Current Location"
+                           FontSize="24"
+                           FontAttributes="Bold"
+                           TextColor="#2c3e50"
+                           HorizontalOptions="Start"
+                           VerticalOptions="Start"
+                           Margin="0,0,0,10" />
 
-                <Label Text="Swipe left to delete"
-                       FontSize="15"
-                       FontAttributes="Bold"
-                       TextColor="#2c3e50"
-                       HorizontalOptions="Start"
-                       VerticalOptions="Start"
-                       Margin="15,0,0,0" /> 
+                    <!-- Current Location Entry -->
+                    <Frame CornerRadius="15"
+                           Padding="15"
+                           BackgroundColor="White"
+                           HasShadow="True"
+                           Margin="0,5">
+                        <Frame.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnItemTapped"
+                                                  CommandParameter="{Binding CurrentLocation}" />
+                        </Frame.GestureRecognizers>
+                        <Label Text="{Binding CurrentLocation.CompleteAddress}"
+                               FontSize="18"
+                               FontAttributes="Bold"
+                               TextColor="#34495e"
+                               HorizontalOptions="Start"
+                               VerticalTextAlignment="Center"
+                               Margin="0,0,0,5" />
+                    </Frame>
 
-                <!-- CollectionView con Swipe per delete -->
-                <CollectionView x:Name="zCollectionView"
-                ItemsSource="{Binding Entries}"
-                SelectionMode="None">
-                    <CollectionView.ItemTemplate>
-                        <DataTemplate>
-                            <!-- SwipeView with SwipeItem -->
-                            <SwipeView>
-                                <SwipeView.RightItems>
-                                    <SwipeItems Mode="Execute">
-                                        <SwipeItem
-                                            Text="Delete"
-                                            BackgroundColor="#e74c3c"
-                                            Invoked="OnDeleteItemBySwipe"
-                                            CommandParameter="{Binding .}" />
-                                    </SwipeItems>
-                                </SwipeView.RightItems>
+                    <!-- Your Locations Section -->
+                    <Label Text="Your Locations"
+                           FontSize="24"
+                           FontAttributes="Bold"
+                           TextColor="#2c3e50"
+                           HorizontalOptions="Start"
+                           VerticalOptions="Start"
+                           Margin="0,20,0,10" />
 
-                                <!-- Main Content with TapGestureRecognizer -->
-                                <Frame CornerRadius="15"
-                                       Padding="15"
-                                       BackgroundColor="White"
-                                       HasShadow="True"
-                                       Margin="0,5"
-                                       >
-                                    <Frame.GestureRecognizers>
-                                        <TapGestureRecognizer Tapped="OnItemTapped"
-                                              CommandParameter="{Binding .}" />
-                                    </Frame.GestureRecognizers>
+                    <!-- Swipe left to delete info -->
+                    <Label Text="Swipe left to delete"
+                           FontSize="15"
+                           FontAttributes="Bold"
+                           TextColor="#2c3e50"
+                           HorizontalOptions="Start"
+                           VerticalOptions="Start"
+                           Margin="15,0,0,10" />
 
-                                    <!-- Your existing content -->
-                                    <Grid>
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="Auto" />
-                                            <RowDefinition Height="*" />
-                                        </Grid.RowDefinitions>
+                    <!-- Filtered Entries CollectionView -->
+                    <CollectionView x:Name="FilteredCollectionView"
+                                    ItemsSource="{Binding FilteredEntries}"
+                                    SelectionMode="None"
+                                    HeightRequest="500">
+                        <!-- Altezza configurabile -->
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <!-- SwipeView with SwipeItem -->
+                                <SwipeView>
+                                    <SwipeView.RightItems>
+                                        <SwipeItems Mode="Execute">
+                                            <SwipeItem
+                                                Text="Delete"
+                                                BackgroundColor="#e74c3c"
+                                                Invoked="OnDeleteItemBySwipe"
+                                                CommandParameter="{Binding .}" />
+                                        </SwipeItems>
+                                    </SwipeView.RightItems>
 
-                                        <!-- Title -->
-                                        <Label Grid.Row="0"
-                                                Text="{Binding CompleteAddress}"
-                                                FontSize="18"
-                                                FontAttributes="Bold"
-                                                TextColor="#34495e"
-                                                HorizontalOptions="Start"
-                                                VerticalTextAlignment="Center"
-                                                Margin="0,0,0,5" />                         
-                                    </Grid>
-                                </Frame>
-                            </SwipeView>
-                        </DataTemplate>
-                    </CollectionView.ItemTemplate>
-                </CollectionView>
-            </StackLayout>
+                                    <!-- Main Content with TapGestureRecognizer -->
+                                    <Frame CornerRadius="15"
+                                           Padding="15"
+                                           BackgroundColor="White"
+                                           HasShadow="True"
+                                           Margin="0,5">
+                                        <Frame.GestureRecognizers>
+                                            <TapGestureRecognizer Tapped="OnItemTapped"
+                                                                  CommandParameter="{Binding .}" />
+                                        </Frame.GestureRecognizers>
+
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="*" />
+                                            </Grid.RowDefinitions>
+
+                                            <!-- Title -->
+                                            <Label Grid.Row="0"
+                                                   Text="{Binding CompleteAddress}"
+                                                   FontSize="18"
+                                                   FontAttributes="Bold"
+                                                   TextColor="#34495e"
+                                                   HorizontalOptions="Start"
+                                                   VerticalTextAlignment="Center"
+                                                   Margin="0,0,0,5" />
+                                        </Grid>
+                                    </Frame>
+                                </SwipeView>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+
+                </VerticalStackLayout>
+            </ScrollView>
         </ContentPage>
     </ShellContent>
 </Shell>

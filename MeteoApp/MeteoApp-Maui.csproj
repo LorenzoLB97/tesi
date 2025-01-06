@@ -35,7 +35,7 @@
 		<MauiIcon Include="Resources\AppIcon\appicon.svg" Color="#FFFFFF" />
 
 		<!-- Splash Screen -->
-		<MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#00d5ff"/>
+		<MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#00d5ff" />
 
 		<!-- Images -->
 		<MauiImage Include="Resources\Images\*" />
@@ -94,9 +94,6 @@
 		<MauiXaml Update="WeatherBlazorPage.xaml">
 		  <Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
-		<MauiXaml Update="TestPage.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</MauiXaml>
 	</ItemGroup>
 	<ItemGroup>
 		<Compile Update="MapPage.xaml.cs">
@@ -107,9 +104,6 @@
 		</Compile>
 		<Compile Update="WeatherBlazorPage.xaml.cs">
 		  <DependentUpon>WeatherBlazorPage.xaml</DependentUpon>
-		</Compile>
-		<Compile Update="TestPage.xaml.cs">
-			<DependentUpon>TestPage.xaml</DependentUpon>
 		</Compile>
 		<Compile Update="WeatherBlazorPage.xaml.cs">
 			<DependentUpon>WeatherBlazorPage.xaml</DependentUpon>

@@ -13,54 +13,75 @@ namespace MeteoApp
         /**
          * location aggiunte tramite bottone add
          * */
-        ObservableCollection<Entry> _entries; 
+        private ObservableCollection<Entry> _entries;
 
+        private Entry _currentLocation;
+        private ObservableCollection<Entry> _filteredEntries;
+
+        // Tutte le locazioni
         public ObservableCollection<Entry> Entries
         {
-            get { return _entries; }
+            get => _entries;
             set
             {
-                _entries = value;
-
-                if (value.FirstOrDefault() != null)
+                if (_entries != value)
                 {
-                    Debug.WriteLine("(Al primo avvio non é corretto) VALORE DI CURRENTLOCATION CORRENTE: " + value.FirstOrDefault().CompleteAddress);
+                    _entries = new ObservableCollection<Entry>(value.OrderByDescending(e => e.IsCurrentLocation));
+                    CurrentLocation = _entries.FirstOrDefault();
+                    FilteredEntries = new ObservableCollection<Entry>(_entries.Skip(1));
+                    OnPropertyChanged(nameof(Entries)); // Notifica il cambiamento di Entries
                 }
+            }
+        }
 
-                // Sort the entries so that currentLocation is first
-                var sortedEntries = value.OrderByDescending(e => e.IsCurrentLocation);
-                _entries = new ObservableCollection<Entry>(sortedEntries);
-                OnPropertyChanged();
+        // Locazioni escluse quella corrente
+        public ObservableCollection<Entry> FilteredEntries
+        {
+            get => _filteredEntries;
+            set
+            {
+                if (_filteredEntries != value)
+                {
+                    _filteredEntries = value;
+                    OnPropertyChanged(nameof(FilteredEntries)); // Notifica il cambiamento di FilteredEntries
+                }
+            }
+        }
+
+        // Locazione corrente
+        public Entry CurrentLocation
+        {
+            get => _currentLocation;
+            set
+            {
+                if (_currentLocation != value)
+                {
+                    _currentLocation = value;
+                    OnPropertyChanged(nameof(CurrentLocation)); // Notifica il cambiamento di CurrentLocation
+                }
             }
         }
 
         public MeteoListViewModel(MyDatabase database)
         {
             _database = database;
-            Entries = new ObservableCollection<Entry>();
 
-            List<Entry> dbEntries = _database.GetEntries();
-
-            for (var i = 0; i < dbEntries.Count; i++)
-            {
-                Entries.Add(dbEntries[i]);
-            }
+            // Inizializza le entries dal database
+            var dbEntries = _database.GetEntries();
+            _entries = new ObservableCollection<Entry>(dbEntries.OrderByDescending(e => e.IsCurrentLocation));
+            CurrentLocation = _entries.FirstOrDefault();
+            FilteredEntries = new ObservableCollection<Entry>(_entries.Skip(1));
         }
 
         // Metodo per aggiornare le entries ogni volta che la pagina viene visualizzata
         public void RefreshEntries()
         {
-            List<Entry> newEntries = _database.GetEntries();
-            if (_entries.Count == newEntries.Count) {
-                return;
-            }
+            var newEntries = _database.GetEntries();
 
-            //BUG: quando fa il reloading delle entries perché viene rivisualizzata ListPage
-            //aggiunge una nuova currentLocation, anche se esiste già quella precedente.
-            if (!_entries.Equals(newEntries))
+            if (!newEntries.SequenceEqual(_entries)) // Confronta gli elementi
             {
-                Debug.WriteLine("ZZZZZZZZZZZZZZZZZZZz");
-                Entries = new ObservableCollection<Entry>(newEntries);                
+                Debug.WriteLine("Aggiornamento delle entries.");
+                Entries = new ObservableCollection<Entry>(newEntries.OrderByDescending(e => e.IsCurrentLocation));
             }
         }
     }

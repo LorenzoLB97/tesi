@@ -51,7 +51,6 @@ public partial class MeteoListPage : Shell
     private void RegisterRoutes()
     {
         Routes.Add("entrydetails", typeof(MeteoItemPage));
-        Routes.Add(nameof(TestPage), typeof(TestPage)); // Aggiungi la nuova pagina TestPage
         Routes.Add(nameof(MapPage), typeof(MapPage));
 
         foreach (var item in Routes)
@@ -89,12 +88,6 @@ public partial class MeteoListPage : Shell
     private async void OnItemAdded(object sender, EventArgs e)
     {
         await Shell.Current.GoToAsync(nameof(MapPage));
-    }
-
-    private async void OnTestPageClicked(object sender, EventArgs e)
-    {
-        // Naviga alla pagina TestPage
-        await Shell.Current.GoToAsync(nameof(TestPage));
     }
 
     public async void GetCurrentLocation()
@@ -156,6 +149,7 @@ public partial class MeteoListPage : Shell
             _viewModel.Entries.Remove(entryToDelete);
         }
 
+        ReloadEntries();
         _isSwipeInProgress = false; // Resetta il flag
     }
 
