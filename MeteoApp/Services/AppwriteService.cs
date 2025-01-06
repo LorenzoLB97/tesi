@@ -16,10 +16,10 @@ namespace MeteoApp.Services
         private readonly Client _client;
         private readonly Databases _databases; //salviamo il riferimento a databases
 
-        private readonly string ApiKey; //= "standard_570f8b7f387f1c19de38d78e0126dc7cfc400959117e985d6e2c22211af2f7bceeffbd1f8ce5fe632267de44d31dc23a9b96da3d58c81e9c59596dfd98989109dacad12dfec8b6924826f5b3026139442fed0260d60c3e55fafad0dc0e7735e5659916110f13e4fabd3f5f8d28d408658d0af19644de30057dc1368397c19587";
-        private readonly string ProjectApiKey; //= "674667ef0002958e47a4"; // Sostituisci con la tua API key
-        private readonly string DatabaseId; //= "67472720001d3bc171b3"; // Sostituisci con il tuo ID database (presi dalla console)
-        private readonly string CollectionId; //= "6747274b00139bc5a5fb"; // Sostituisci con il tuo ID collezione (presi dalla console)
+        private readonly string ApiKey; 
+        private readonly string ProjectApiKey; 
+        private readonly string DatabaseId; 
+        private readonly string CollectionId; 
 
         public AppwriteService(IConfiguration configuration) {
             _client = new Client();
@@ -83,7 +83,6 @@ namespace MeteoApp.Services
                 Console.WriteLine($"Errore durante la creazione del database o collezione: {ex.Message}");
             }
         }
-
 
         public async Task SaveEntryAsync(Entry entry)
         {

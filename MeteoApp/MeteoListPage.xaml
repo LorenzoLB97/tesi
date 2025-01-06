@@ -3,7 +3,7 @@
        x:Class="MeteoApp.MeteoListPage">
 
     <ShellContent>
-        <ContentPage>
+        <ContentPage Background="Azure">
             <ContentPage.ToolbarItems>
                 <ToolbarItem Text="TestPage" Clicked="OnTestPageClicked" />
                 <ToolbarItem Text="Add" Clicked="OnItemAdded" />
@@ -11,13 +11,21 @@
 
             <StackLayout Margin="20" Spacing="10">
 
-                <Label Text="Lista Località"
+                <Label Text="Location List"
                        FontSize="24"
                        FontAttributes="Bold"
                        TextColor="#2c3e50"
                        HorizontalOptions="Center"
                        VerticalOptions="Start"
-                       Margin="0,0,0,10" />
+                       Margin="0,0,0,0" />
+
+                <Label Text="Swipe left to delete"
+                       FontSize="15"
+                       FontAttributes="Bold"
+                       TextColor="#2c3e50"
+                       HorizontalOptions="Start"
+                       VerticalOptions="Start"
+                       Margin="15,0,0,0" /> 
 
                 <!-- CollectionView con Swipe per delete -->
                 <CollectionView x:Name="zCollectionView"
@@ -30,19 +38,20 @@
                                 <SwipeView.RightItems>
                                     <SwipeItems Mode="Execute">
                                         <SwipeItem
-                            Text="Delete"
-                            BackgroundColor="#e74c3c"
-                            Invoked="OnDeleteItemBySwipe"
-                            CommandParameter="{Binding .}" />
+                                            Text="Delete"
+                                            BackgroundColor="#e74c3c"
+                                            Invoked="OnDeleteItemBySwipe"
+                                            CommandParameter="{Binding .}" />
                                     </SwipeItems>
                                 </SwipeView.RightItems>
 
                                 <!-- Main Content with TapGestureRecognizer -->
                                 <Frame CornerRadius="15"
-                       Padding="15"
-                       BackgroundColor="White"
-                       HasShadow="True"
-                       Margin="0,5">
+                                       Padding="15"
+                                       BackgroundColor="White"
+                                       HasShadow="True"
+                                       Margin="0,5"
+                                       >
                                     <Frame.GestureRecognizers>
                                         <TapGestureRecognizer Tapped="OnItemTapped"
                                               CommandParameter="{Binding .}" />
@@ -57,27 +66,19 @@
 
                                         <!-- Title -->
                                         <Label Grid.Row="0"
-                               Text="{Binding CompleteAddress}"
-                               FontSize="18"
-                               FontAttributes="Bold"
-                               TextColor="#34495e"
-                               HorizontalOptions="Start"
-                               VerticalTextAlignment="Center"
-                               Margin="0,0,0,5" />
-
-                                        <!-- Additional details -->
-                                        <Label Grid.Row="1"
-                               Text="Swipe left to delete"
-                               FontSize="14"
-                               TextColor="#7f8c8d"
-                               HorizontalOptions="Start" />
+                                                Text="{Binding CompleteAddress}"
+                                                FontSize="18"
+                                                FontAttributes="Bold"
+                                                TextColor="#34495e"
+                                                HorizontalOptions="Start"
+                                                VerticalTextAlignment="Center"
+                                                Margin="0,0,0,5" />                         
                                     </Grid>
                                 </Frame>
                             </SwipeView>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
                 </CollectionView>
-
             </StackLayout>
         </ContentPage>
     </ShellContent>

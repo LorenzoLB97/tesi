@@ -159,8 +159,6 @@ public partial class MeteoListPage : Shell
         _isSwipeInProgress = false; // Resetta il flag
     }
 
-    // Remove the OnListItemSelected method
-
     // Add this method
     private void OnItemTapped(object sender, TappedEventArgs e)
     {
