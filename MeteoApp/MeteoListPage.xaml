@@ -1,12 +1,21 @@
-﻿<Shell xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-       xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-       x:Class="MeteoApp.MeteoListPage">
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Shell 
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="MeteoApp.MeteoListPage"
+    Shell.BackgroundColor="#87CEEB">
 
     <ShellContent>
-        <ContentPage Background="Transparent">
+        <ContentPage Background="white">
+
             <!-- Toolbar -->
             <ContentPage.ToolbarItems>
-                <ToolbarItem Text="Add" Clicked="OnItemAdded" />
+                <!-- Rimuovo 'Text="Add"' e uso solo l'icona -->
+                <ToolbarItem 
+                    IconImageSource="map.svg" 
+                    Clicked="OnItemAdded" 
+                    Priority="0" 
+                    Order="Primary"/>
             </ContentPage.ToolbarItems>
 
             <!-- Scrollable Content -->
@@ -29,8 +38,9 @@
                            HasShadow="True"
                            Margin="0,5,10,-10">
                         <Frame.GestureRecognizers>
-                            <TapGestureRecognizer Tapped="OnItemTapped"
-                                                  CommandParameter="{Binding CurrentLocation}" />
+                            <TapGestureRecognizer 
+                                Tapped="OnItemTapped"
+                                CommandParameter="{Binding CurrentLocation}" />
                         </Frame.GestureRecognizers>
 
                         <!-- Horizontal Layout for Image and Address -->
@@ -95,8 +105,9 @@
                                            HasShadow="True"
                                            Margin="0,5">
                                         <Frame.GestureRecognizers>
-                                            <TapGestureRecognizer Tapped="OnItemTapped"
-                                                                  CommandParameter="{Binding .}" />
+                                            <TapGestureRecognizer
+                                                Tapped="OnItemTapped"
+                                                CommandParameter="{Binding .}" />
                                         </Frame.GestureRecognizers>
 
                                         <Grid>

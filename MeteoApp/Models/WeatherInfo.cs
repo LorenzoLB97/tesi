@@ -144,9 +144,6 @@ public class Main
     }
 }
 
-
-
-
 public class Weather
 {
     [JsonPropertyName("id")]

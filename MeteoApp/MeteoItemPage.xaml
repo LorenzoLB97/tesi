@@ -1,76 +1,199 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="MeteoApp.MeteoItemPage"
-             xmlns:local="clr-namespace:MeteoApp" 
-             BackgroundColor="#f0f0f0">
-    <ContentPage.Behaviors>
-        <!-- Eventualmente aggiungi comportamenti se necessario -->
-    </ContentPage.Behaviors>
+<ContentPage 
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="MeteoApp.MeteoItemPage"
+    BackgroundColor="#FFFFFF">
 
-    <ScrollView>
-        <StackLayout x:Name="MainLayout" Spacing="25" Padding="20" BackgroundColor="White">
+    <!-- 
+        Usiamo una Grid con 2 righe:
+        - RowDefinitions="*,Auto"
+          -> Row 0 (asterisco) si espande per ospitare lo ScrollView.
+          -> Row 1 (Auto) è la riga in basso dove metteremo il logo.
+     -->
+    <Grid RowDefinitions="*,Auto">
 
-            <!-- Contenuto -->
-            <Button Text="{Binding Entry.CompleteAddress}"
-                    FontSize="20"
-                    TextColor="#2c3e50"
-                    FontAttributes="Bold"
-                    BackgroundColor="LightBlue"
-                    BorderWidth="2"
-                    BorderColor="Black"
+        <!-- SCROLLVIEW in Row 0 -->
+        <ScrollView Grid.Row="0">
+
+            <!-- LAYOUT PRINCIPALE -->
+            <VerticalStackLayout
+                x:Name="MainLayout"
+                Padding="20"
+                Spacing="25"
+                BackgroundColor="Transparent">
+
+                <!-- SEZIONE IN ALTO: "Complete Address" cliccabile in un Frame -->
+                <Frame
+                    HasShadow="True"
                     CornerRadius="10"
-                    HorizontalOptions="Center"
-                    VerticalOptions="Start"
-                    Clicked="OnCompleteAddressClicked">
-                <Button.LineBreakMode>WordWrap</Button.LineBreakMode>
-            </Button>
+                    Padding="15"
+                    BackgroundColor="White"
+                    BorderColor="#dddddd">
 
-            <Image Source="{Binding WeatherInfo.Weather[0].IconUrl}" 
-                   WidthRequest="100" 
-                   HeightRequest="100"
-                   HorizontalOptions="Center"
-                   VerticalOptions="Start" />
+                    <!-- Layout orizzontale con icona + testo cliccabile -->
+                    <HorizontalStackLayout Spacing="-25" VerticalOptions="Center">
 
-            <Label Text="{Binding WeatherInfo.Weather[0].MainDescription}"
-                   FontSize="22"
-                   TextColor="#34495e"
-                   FontAttributes="Bold"
-                   HorizontalOptions="Center" />
+                        <!-- Icona per suggerire "posizione" -->
+                        <Image 
+                            Source="pin_icon.png"
+                            WidthRequest="24"
+                            HeightRequest="24"
+                            VerticalOptions="Center" />
 
-            <Label Text="{Binding WeatherInfo.Weather[0].Description}"
-                   FontSize="18"
-                   TextColor="#7f8c8d"
-                   HorizontalOptions="Center" />
+                        <!-- Il testo cliccabile (Complete Address) -->
+                        <Button 
+                            Text="{Binding Entry.CompleteAddress}"
+                            FontSize="18"
+                            FontAttributes="Bold"
+                            TextColor="#2C3E50"
+                            BackgroundColor="Transparent"
+                            HorizontalOptions="Start"
+                            Clicked="OnCompleteAddressClicked">
 
-            <BoxView HeightRequest="2" BackgroundColor="#ecf0f1" HorizontalOptions="Fill" />
+                            <!-- Wrap del testo se troppo lungo -->
+                            <Button.LineBreakMode>WordWrap</Button.LineBreakMode>
+                        </Button>
+                    </HorizontalStackLayout>
+                </Frame>
 
-            <!-- Griglia dei dati meteo -->
-            <Grid Padding="0" ColumnSpacing="15" RowSpacing="20">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
+                <!-- IMMAGINE METEO (Icona) in un Frame rotondo -->
+                <Frame
+                    Padding="15"
+                    CornerRadius="75"
+                    BackgroundColor="White"
+                    HasShadow="True"
+                    HorizontalOptions="Center">
+                    <Image 
+                        Source="{Binding WeatherInfo.Weather[0].IconUrl}" 
+                        WidthRequest="80" 
+                        HeightRequest="80"
+                        HorizontalOptions="Center"
+                        VerticalOptions="Center" />
+                </Frame>
 
-                <StackLayout Grid.Row="0" Grid.Column="0" HorizontalOptions="Center">
-                    <Label Text="Temperatura" FontSize="16" TextColor="#2c3e50" FontAttributes="Bold" />
-                    <Label Text="{Binding WeatherInfo.Main.TempCelsius, StringFormat='{0:F2} °C'}" FontSize="20" TextColor="#3498db" />
-                </StackLayout>
+                <!-- DESCRIZIONI METEO: Titolo e sottotitolo -->
+                <VerticalStackLayout 
+                    Spacing="2" 
+                    HorizontalOptions="Center">
 
-                <StackLayout Grid.Row="0" Grid.Column="1" HorizontalOptions="Center">
-                    <Label Text="Vento" FontSize="16" TextColor="#2c3e50" FontAttributes="Bold" />
-                    <Label Text="{Binding WeatherInfo.Wind.Speed, StringFormat='{0} m/s'}" FontSize="20" TextColor="#3498db" />
-                </StackLayout>
-            </Grid>
+                    <Label 
+                        Text="{Binding WeatherInfo.Weather[0].MainDescription}"
+                        FontSize="24"
+                        TextColor="#34495E"
+                        FontAttributes="Bold" 
+                        HorizontalTextAlignment="Center" />
 
-            <Image Source="open_weather_logo.png"
-               HorizontalOptions="Center"
-               VerticalOptions="End" 
-               Aspect="AspectFit"/>
-        </StackLayout>
-    </ScrollView>
+                    <Label 
+                        Text="{Binding WeatherInfo.Weather[0].Description}"
+                        FontSize="18"
+                        TextColor="#7F8C8D"
+                        HorizontalTextAlignment="Center" />
+                </VerticalStackLayout>
+
+                <!-- Separatore orizzontale -->
+                <BoxView HeightRequest="2" 
+                         BackgroundColor="#BDC3C7" 
+                         HorizontalOptions="Fill" />
+
+                <!-- GRIGLIA DEI DATI METEO (Temperature, Wind Speed, Humidity, Clouds) -->
+                <Grid
+                    Padding="10"
+                    BackgroundColor="White"
+                    ColumnSpacing="20"
+                    RowSpacing="20">
+
+                    <!-- 2 righe, 2 colonne -->
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Temperatura (riga 0, colonna 0) -->
+                    <VerticalStackLayout 
+                        Grid.Row="0" 
+                        Grid.Column="0"
+                        Spacing="5"
+                        HorizontalOptions="Center">
+                        <Label 
+                            Text="Temperature" 
+                            FontSize="16" 
+                            TextColor="#2C3E50" 
+                            FontAttributes="Bold" />
+                        <Label 
+                            Text="{Binding WeatherInfo.Main.TempCelsius, StringFormat='{0:F2} °C'}"
+                            FontSize="20" 
+                            TextColor="#3498DB" />
+                    </VerticalStackLayout>
+
+                    <!-- Vento (riga 0, colonna 1) -->
+                    <VerticalStackLayout
+                        Grid.Row="0"
+                        Grid.Column="1"
+                        Spacing="5"
+                        HorizontalOptions="Center">
+                        <Label 
+                            Text="Wind speed" 
+                            FontSize="16" 
+                            TextColor="#2C3E50" 
+                            FontAttributes="Bold" />
+                        <Label 
+                            Text="{Binding WeatherInfo.Wind.Speed, StringFormat='{0} m/s'}" 
+                            FontSize="20" 
+                            TextColor="#3498DB" />
+                    </VerticalStackLayout>
+
+                    <!-- Umidità (riga 1, colonna 0) -->
+                    <VerticalStackLayout
+                        Grid.Row="1"
+                        Grid.Column="0"
+                        Spacing="5"
+                        HorizontalOptions="Center">
+                        <Label 
+                            Text="Humidity"
+                            FontSize="16"
+                            TextColor="#2C3E50" 
+                            FontAttributes="Bold" />
+                        <Label 
+                            Text="{Binding WeatherInfo.Main.Humidity, StringFormat='{0}%'}"
+                            FontSize="20" 
+                            TextColor="#3498DB" />
+                    </VerticalStackLayout>
+
+                    <!-- Nuvolosità (riga 1, colonna 1) -->
+                    <VerticalStackLayout
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        Spacing="5"
+                        HorizontalOptions="Center">
+                        <Label 
+                            Text="Clouds"
+                            FontSize="16"
+                            TextColor="#2C3E50"
+                            FontAttributes="Bold" />
+                        <Label 
+                            Text="{Binding WeatherInfo.Clouds.All, StringFormat='{0}%'}"
+                            FontSize="20"
+                            TextColor="#3498DB" />
+                    </VerticalStackLayout>
+                </Grid>
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- LOGO OpenWeather in basso a sinistra (Row 1), rimpicciolito -->
+        <Grid Grid.Row="1"
+              HorizontalOptions="Center"
+              VerticalOptions="End"
+              Margin="20">
+            <Image 
+                Source="open_weather_logo.png"
+                WidthRequest="150"    
+                HeightRequest="150"
+                Aspect="AspectFit" />
+        </Grid>
+    </Grid>
 </ContentPage>
