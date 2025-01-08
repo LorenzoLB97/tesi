@@ -2,13 +2,15 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:maps="http://schemas.microsoft.com/dotnet/2021/maui/maps"
-             x:Class="MeteoApp.MapPage">
+             x:Class="MeteoApp.MapPage"
+             BackgroundColor="{AppThemeBinding Light=White, Dark=White}">
 
     <StackLayout>
         <!-- Barra di ricerca per cercare una località -->
         <SearchBar x:Name="searchBar"
                    Placeholder="Cerca una località"
-                   SearchButtonPressed="OnSearchButtonPressed" />
+                   SearchButtonPressed="OnSearchButtonPressed" 
+                   Background="White"/>
 
         <!-- Mappa che mostra la posizione dell'utente -->
         <maps:Map x:Name="map"
