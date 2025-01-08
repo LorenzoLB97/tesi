@@ -64,6 +64,7 @@
 		<None Remove="Models\" />
 		<None Remove="Resources\ApiKey\appsettings.json" />
 		<None Remove="Resources\Images\current_location.svg" />
+		<None Remove="Resources\Images\info.svg" />
 		<None Remove="Resources\Images\map.svg" />
 		<None Remove="Resources\Images\open_weather_logo.png" />
 		<None Remove="sqlite-net-pcl" />
